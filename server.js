@@ -5,6 +5,7 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public')); // <-- Serve files like products.html
 
 app.post('/create-checkout-session', async (req, res) => {
   try {
@@ -21,8 +22,8 @@ app.post('/create-checkout-session', async (req, res) => {
         quantity: item.quantity,
       })),
       mode: 'payment',
-      success_url: 'http://localhost:5500/success.html',
-      cancel_url: 'http://localhost:5500/cancel.html',
+      success_url: 'https://your-app-name.onrender.com/success.html',
+      cancel_url: 'https://your-app-name.onrender.com/cancel.html',
     });
 
     res.json({ id: session.id });
@@ -32,7 +33,6 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// ✅ Use dynamic port for Render
 const PORT = process.env.PORT || 4242;
 
 app.listen(PORT, () => {
