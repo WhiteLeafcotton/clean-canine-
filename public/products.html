@@ -221,6 +221,42 @@
       color: #B5DBFF;
       font-size: 1.2rem;
     }
+ .carousel {
+  position: relative;
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  padding: 0.2rem 0.8rem;
+  cursor: pointer;
+  z-index: 5;
+  border-radius: 6px;
+}
+
+.carousel-nav.prev {
+  left: 0.5rem;
+}
+
+.carousel-nav.next {
+  right: 0.5rem;
+}
 
     footer {
       text-align: center;
