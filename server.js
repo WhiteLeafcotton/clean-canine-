@@ -5,7 +5,7 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // <-- Serve files like products.html
+app.use(express.static('public')); // Serve static files from 'public' folder
 
 app.post('/create-checkout-session', async (req, res) => {
   try {
@@ -34,8 +34,8 @@ app.post('/create-checkout-session', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 4242;
+const HOST = '0.0.0.0';
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Server running on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`✅ Server running on http://${HOST}:${PORT}`);
 });
-
