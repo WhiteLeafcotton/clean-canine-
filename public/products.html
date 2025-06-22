@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Products | Clean Canine Co.</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://js.stripe.com/v3/"></script>
@@ -10,10 +10,12 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { max-width: 100%; overflow-x: hidden; }
     body { font-family: 'DM Sans', sans-serif; background: #fff; color: #111; line-height: 1.6; }
+
     header {
       background-color: #000; color: #fff; padding: 0.5rem 2%; position: fixed;
       top: 0; width: 100%; z-index: 1000; height: 3.5rem; display: flex; align-items: center;
     }
+
     .navbar { display: flex; justify-content: space-between; align-items: center; width: 100%; }
     .brand-name {
       font-weight: 700; font-size: 1.4rem; text-transform: uppercase;
@@ -23,44 +25,48 @@
     .nav-links a {
       color: #fff; text-decoration: none; font-size: 0.9rem; text-transform: uppercase;
     }
+
     .menu-toggle {
       display: none; font-size: 1.8rem; cursor: pointer; color: #fff;
     }
+
     .products-section {
       width: 96%; margin: 6rem auto 2rem;
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
     }
+
     .product-card {
-      position: relative;
-      border: 1px solid #eee; border-radius: 8px; padding: 1rem;
-      text-align: center; transition: box-shadow 0.3s ease; background: #fff;
+      border-radius: 8px; padding: 0; background: #fff; text-align: center;
       cursor: pointer;
     }
-    .product-card:hover {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .badge {
-      position: absolute; top: 0.5rem; left: 0.5rem;
-      background: red; color: #fff; font-size: 0.7rem;
-      padding: 0.3rem 0.5rem; border-radius: 4px;
-    }
     .product-image {
-      width: 100%; height: 200px; object-fit: cover;
-      border-radius: 6px; margin-bottom: 0.8rem;
+      width: 100%; height: 100%; object-fit: cover;
+      border-radius: 6px;
     }
-    .product-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+
+    .product-title { font-size: 1rem; font-weight: 600; margin-top: 0.6rem; }
     .product-price { font-size: 0.9rem; color: #333; margin-bottom: 0.6rem; }
-    .add-cart {
-      padding: 0.5rem 1rem; background-color: #000; color: #fff;
-      border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+
+    .lightbox {
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8); z-index: 2000; justify-content: center; align-items: center;
     }
-    .add-cart:hover { background-color: #444; }
+    .lightbox-content {
+      display: flex; gap: 1rem; width: 90vw; height: 90vh;
+    }
+    .lightbox-content img {
+      width: 50%; height: 100%; object-fit: contain;
+    }
+    .lightbox-close {
+      position: absolute; top: 2rem; right: 2rem; color: #fff;
+      font-size: 2rem; cursor: pointer;
+    }
+
     #cart {
       position: fixed; top: 4rem; right: -300px; background: #fff;
-      border: 1px solid #ccc; border-radius: 6px;
-      padding: 1rem; width: 250px; max-height: 400px; overflow-y: auto;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: right 0.3s ease-in-out;
+      border-radius: 6px; padding: 1rem; width: 250px;
+      max-height: 400px; overflow-y: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: right 0.3s ease-in-out; z-index: 1500;
     }
     #cart.open { right: 1rem; }
     #cart h4 { margin-bottom: 0.5rem; }
@@ -75,12 +81,19 @@
       border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;
       width: 100%; font-size: 0.85rem;
     }
+    .cart-close {
+      position: absolute; top: 0.5rem; right: 0.5rem; cursor: pointer; color: red; font-size: 1.2rem;
+    }
+
     footer {
       text-align: center; padding: 1.5rem 0; font-size: 0.9rem;
       color: #555; background-color: #f8f8f8; border-top: 1px solid #eaeaea;
     }
+
     @media (max-width: 768px) {
-      .products-section { grid-template-columns: 1fr; }
+      .products-section {
+        grid-template-columns: repeat(3, 1fr);
+      }
       .menu-toggle { display: block; }
       .nav-links {
         display: none; flex-direction: column;
@@ -93,12 +106,12 @@
 <body>
   <header>
     <div class="navbar">
-      <a href="https://whiteleafcotton.github.io/CleanCanineCo./index.html" class="brand-name">clean canine Co.</a>
+      <a href="index.html" class="brand-name">clean canine Co.</a>
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
       <ul class="nav-links">
         <li><a href="Reviews.html">Reviews</a></li>
-        <li><a href="https://whiteleafcotton.github.io/CleanCanineCo./Services.html">Services</a></li>
-        <li><a href="https://clean-canine-1.onrender.com/products.html">Products</a></li>
+        <li><a href="Services.html">Services</a></li>
+        <li><a href="products.html">Products</a></li>
         <li><a href="Book-Appointment.html">Memberships</a></li>
       </ul>
     </div>
@@ -107,10 +120,19 @@
   <section class="products-section" id="products"></section>
 
   <div id="cart">
+    <div class="cart-close" onclick="toggleCart(false)">✖</div>
     <h4>Your Cart</h4>
     <div id="cart-items"></div>
     <p class="cart-total">Total: $<span id="cart-total">0.00</span></p>
     <button class="checkout-btn" onclick="checkout()">Checkout</button>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" onclick="closeLightbox()">✖</div>
+    <div class="lightbox-content">
+      <img src="" id="lightbox-img1" />
+      <img src="" id="lightbox-img2" />
+    </div>
   </div>
 
   <footer>
@@ -118,11 +140,47 @@
   </footer>
 
   <script>
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const products = [
+      { title: 'Nourish Balm', price: 12, img: 'https://via.placeholder.com/300?text=Nourish+Balm', detail1: 'https://via.placeholder.com/800x1200?text=Nourish+1', detail2: 'https://via.placeholder.com/800x1200?text=Nourish+2' },
+      { title: 'Paw Cleanser', price: 10, img: 'https://via.placeholder.com/300?text=Paw+Cleanser', detail1: 'https://via.placeholder.com/800x1200?text=Paw+1', detail2: 'https://via.placeholder.com/800x1200?text=Paw+2' },
+      { title: 'Gentle Shampoo', price: 14, img: 'https://via.placeholder.com/300?text=Shampoo', detail1: 'https://via.placeholder.com/800x1200?text=Shampoo+1', detail2: 'https://via.placeholder.com/800x1200?text=Shampoo+2' },
+      { title: 'Fresh Breath Spray', price: 9, img: 'https://via.placeholder.com/300?text=Breath+Spray', detail1: 'https://via.placeholder.com/800x1200?text=Spray+1', detail2: 'https://via.placeholder.com/800x1200?text=Spray+2' },
+      { title: 'Flea Comb', price: 7, img: 'https://via.placeholder.com/300?text=Flea+Comb', detail1: 'https://via.placeholder.com/800x1200?text=Comb+1', detail2: 'https://via.placeholder.com/800x1200?text=Comb+2' },
+      { title: 'Deodorizing Spray', price: 11, img: 'https://via.placeholder.com/300?text=Deodorizer', detail1: 'https://via.placeholder.com/800x1200?text=Deo+1', detail2: 'https://via.placeholder.com/800x1200?text=Deo+2' },
+      { title: 'Pet Wipes', price: 8, img: 'https://via.placeholder.com/300?text=Pet+Wipes', detail1: 'https://via.placeholder.com/800x1200?text=Wipes+1', detail2: 'https://via.placeholder.com/800x1200?text=Wipes+2' },
+      { title: 'Ear Cleaner', price: 13, img: 'https://via.placeholder.com/300?text=Ear+Cleaner', detail1: 'https://via.placeholder.com/800x1200?text=Ear+1', detail2: 'https://via.placeholder.com/800x1200?text=Ear+2' },
+      { title: 'Membership Pass', price: 35, img: 'https://via.placeholder.com/300?text=Membership', detail1: 'https://via.placeholder.com/800x1200?text=Pass+1', detail2: 'https://via.placeholder.com/800x1200?text=Pass+2' }
+    ];
+
+    const productsContainer = document.getElementById('products');
+    products.forEach((product) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${product.img}" alt="${product.title}" class="product-image" onclick="showDetails('${product.detail1}', '${product.detail2}')">
+        <div class="product-title">${product.title}</div>
+        <div class="product-price">$${product.price.toFixed(2)}</div>
+        <button class="add-cart" onclick="addToCart('${product.title}', ${product.price})">Add to Cart</button>
+      `;
+      productsContainer.appendChild(card);
+    });
+
+    function showDetails(img1, img2) {
+      document.getElementById('lightbox-img1').src = img1;
+      document.getElementById('lightbox-img2').src = img2;
+      document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
 
     function toggleMenu() {
-      document.querySelector('.nav-links').classList.toggle('show');
+      const navLinks = document.querySelector('.nav-links');
+      navLinks.classList.toggle('show');
     }
+
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
     function saveCart() {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -146,15 +204,22 @@
       const totalEl = document.getElementById('cart-total');
       container.innerHTML = '';
       let total = 0;
+
       cartItems.forEach((item, index) => {
         total += item.price;
         container.innerHTML += `<p>${item.title} - $${item.price.toFixed(2)} <button class="remove-btn" onclick="removeFromCart(${index})">x</button></p>`;
       });
+
       totalEl.textContent = total.toFixed(2);
     }
 
     function toggleCart(open) {
-      document.getElementById('cart').classList.toggle('open', open);
+      const cart = document.getElementById('cart');
+      if (open) {
+        cart.classList.add('open');
+      } else {
+        cart.classList.remove('open');
+      }
     }
 
     async function checkout() {
@@ -174,35 +239,6 @@
     }
 
     displayCart();
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const products = [
-        { title: 'Paw Balm', price: 10, image: 'https://via.placeholder.com/200?text=Paw+Balm' },
-        { title: 'Flea Collar', price: 15, image: 'https://via.placeholder.com/200?text=Flea+Collar' },
-        { title: 'Shampoo', price: 20, image: 'https://via.placeholder.com/200?text=Shampoo' },
-        { title: 'Toothbrush', price: 8, image: 'https://via.placeholder.com/200?text=Toothbrush' },
-        { title: 'Deodorizing Spray', price: 12, image: 'https://via.placeholder.com/200?text=Spray' },
-        { title: 'Grooming Gloves', price: 14, image: 'https://via.placeholder.com/200?text=Gloves' },
-        { title: 'Dog Cologne', price: 11, image: 'https://via.placeholder.com/200?text=Cologne' },
-        { title: 'Ear Cleaner', price: 13, image: 'https://via.placeholder.com/200?text=Ear+Cleaner' },
-        { title: 'Nail Clippers', price: 9, image: 'https://via.placeholder.com/200?text=Nail+Clippers' }
-      ];
-
-      const container = document.getElementById('products');
-      products.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <img src="${p.image}" alt="${p.title}" class="product-image">
-          <div class="product-title">${p.title}</div>
-          <div class="product-price">$${p.price.toFixed(2)}</div>
-          <button class="add-cart" onclick="addToCart('${p.title}', ${p.price}); event.stopPropagation();">Add to Cart</button>
-        `;
-        card.onclick = () => alert(`${p.title} - Enlarged view with 2 image carousel coming soon.`);
-        container.appendChild(card);
-      });
-    });
   </script>
 </body>
 </html>
-
