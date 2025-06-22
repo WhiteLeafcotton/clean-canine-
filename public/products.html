@@ -32,27 +32,21 @@
     }
     .product-card {
       position: relative;
-      border: 1px solid #eee; border-radius: 8px; padding: 1rem;
+      border: 1px solid #eee; border-radius: 8px; padding: 0;
       text-align: center; transition: box-shadow 0.3s ease; background: #fff;
-      cursor: pointer;
+      cursor: pointer; overflow: hidden; display: flex; flex-direction: column;
     }
     .product-card:hover {
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .badge {
-      position: absolute; top: 0.5rem; left: 0.5rem;
-      background: red; color: #fff; font-size: 0.7rem;
-      padding: 0.3rem 0.5rem; border-radius: 4px;
-    }
     .product-image {
-      width: 100%; height: 200px; object-fit: cover;
-      border-radius: 6px; margin-bottom: 0.8rem;
+      width: 100%; height: 100%; object-fit: cover;
     }
-    .product-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .product-title { font-size: 1rem; font-weight: 600; margin-top: 0.5rem; }
     .product-price { font-size: 0.9rem; color: #333; margin-bottom: 0.6rem; }
     .add-cart {
       padding: 0.5rem 1rem; background-color: #000; color: #fff;
-      border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+      border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-bottom: 0.8rem;
     }
     .add-cart:hover { background-color: #444; }
     #cart {
@@ -75,6 +69,23 @@
       border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;
       width: 100%; font-size: 0.85rem;
     }
+    #modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8); z-index: 2000; justify-content: center; align-items: center;
+    }
+    #modal.active { display: flex; }
+    .carousel {
+      background: #fff; padding: 1rem; border-radius: 8px; max-width: 80%; position: relative;
+    }
+    .carousel img { width: 100%; max-height: 400px; object-fit: cover; }
+    .carousel button {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.5); color: white; border: none; padding: 0.5rem;
+      cursor: pointer;
+    }
+    .carousel .prev { left: 0.5rem; }
+    .carousel .next { right: 0.5rem; }
+    .carousel .close { top: 0.5rem; right: 0.5rem; transform: none; position: absolute; }
     footer {
       text-align: center; padding: 1.5rem 0; font-size: 0.9rem;
       color: #555; background-color: #f8f8f8; border-top: 1px solid #eaeaea;
@@ -93,13 +104,13 @@
 <body>
   <header>
     <div class="navbar">
-      <a href="https://whiteleafcotton.github.io/CleanCanineCo./index.html" class="brand-name">clean canine Co.</a>
+      <a href="#" class="brand-name">clean canine Co.</a>
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
       <ul class="nav-links">
-        <li><a href="Reviews.html">Reviews</a></li>
-        <li><a href="https://whiteleafcotton.github.io/CleanCanineCo./Services.html">Services</a></li>
-        <li><a href="https://clean-canine-1.onrender.com/products.html">Products</a></li>
-        <li><a href="Book-Appointment.html">Memberships</a></li>
+        <li><a href="#">Reviews</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">Memberships</a></li>
       </ul>
     </div>
   </header>
@@ -113,16 +124,50 @@
     <button class="checkout-btn" onclick="checkout()">Checkout</button>
   </div>
 
+  <div id="modal">
+    <div class="carousel">
+      <button class="close" onclick="toggleModal(false)">✕</button>
+      <button class="prev" onclick="navigateCarousel(-1)">&lt;</button>
+      <img id="carousel-img" src="" alt="Product Detail">
+      <button class="next" onclick="navigateCarousel(1)">&gt;</button>
+    </div>
+  </div>
+
   <footer>
     <p>&copy; 2025 Clean Canine Co. All rights reserved.</p>
   </footer>
 
   <script>
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const products = Array.from({ length: 9 }).map((_, i) => {
+      const id = i + 1;
+      return {
+        title: `Product ${id}`,
+        price: 10 + id,
+        image: `https://via.placeholder.com/300x300?text=Product+${id}`,
+        detailImages: [
+          `https://via.placeholder.com/600x400?text=Detail+${id}-1`,
+          `https://via.placeholder.com/600x400?text=Detail+${id}-2`
+        ]
+      };
+    });
+
+    let currentImages = [], currentIndex = 0;
+
+    function toggleModal(show) {
+      document.getElementById('modal').classList.toggle('active', show);
+      if (show) document.getElementById('carousel-img').src = currentImages[currentIndex];
+    }
+
+    function navigateCarousel(dir) {
+      currentIndex = (currentIndex + dir + currentImages.length) % currentImages.length;
+      document.getElementById('carousel-img').src = currentImages[currentIndex];
+    }
 
     function toggleMenu() {
       document.querySelector('.nav-links').classList.toggle('show');
     }
+
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
     function saveCart() {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -154,7 +199,9 @@
     }
 
     function toggleCart(open) {
-      document.getElementById('cart').classList.toggle('open', open);
+      const cart = document.getElementById('cart');
+      if (open) cart.classList.add('open');
+      else cart.classList.remove('open');
     }
 
     async function checkout() {
@@ -173,22 +220,9 @@
       }
     }
 
-    displayCart();
-
     document.addEventListener('DOMContentLoaded', () => {
-      const products = [
-        { title: 'Paw Balm', price: 10, image: 'https://via.placeholder.com/200?text=Paw+Balm' },
-        { title: 'Flea Collar', price: 15, image: 'https://via.placeholder.com/200?text=Flea+Collar' },
-        { title: 'Shampoo', price: 20, image: 'https://via.placeholder.com/200?text=Shampoo' },
-        { title: 'Toothbrush', price: 8, image: 'https://via.placeholder.com/200?text=Toothbrush' },
-        { title: 'Deodorizing Spray', price: 12, image: 'https://via.placeholder.com/200?text=Spray' },
-        { title: 'Grooming Gloves', price: 14, image: 'https://via.placeholder.com/200?text=Gloves' },
-        { title: 'Dog Cologne', price: 11, image: 'https://via.placeholder.com/200?text=Cologne' },
-        { title: 'Ear Cleaner', price: 13, image: 'https://via.placeholder.com/200?text=Ear+Cleaner' },
-        { title: 'Nail Clippers', price: 9, image: 'https://via.placeholder.com/200?text=Nail+Clippers' }
-      ];
-
       const container = document.getElementById('products');
+      container.innerHTML = '';
       products.forEach(p => {
         const card = document.createElement('div');
         card.className = 'product-card';
@@ -198,11 +232,15 @@
           <div class="product-price">$${p.price.toFixed(2)}</div>
           <button class="add-cart" onclick="addToCart('${p.title}', ${p.price}); event.stopPropagation();">Add to Cart</button>
         `;
-        card.onclick = () => alert(`${p.title} - Enlarged view with 2 image carousel coming soon.`);
+        card.onclick = () => {
+          currentImages = p.detailImages;
+          currentIndex = 0;
+          toggleModal(true);
+        };
         container.appendChild(card);
       });
+      displayCart();
     });
   </script>
 </body>
 </html>
-
