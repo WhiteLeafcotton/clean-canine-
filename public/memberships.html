@@ -1,594 +1,644 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Membership | Clean Canine Co.</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
-  <script src="https://js.stripe.com/v3/"></script>
-  <style>
-    /* Reset and base */
-    * {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
-    }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #fff;
-      color: #111;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Membership | Clean Canine Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  /* Reset */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #fff;
+    color: #111;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a { text-decoration: none; color: inherit; }
 
-    /* Header */
-    header {
-      background-color: #000;
-      color: #fff;
-      padding: 0.6rem 2%;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 3.5rem;
-      display: flex;
-      align-items: center;
-      z-index: 1000;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 1.4rem;
-      letter-spacing: 1.5px;
-    }
-    header a.brand-name {
-      color: #fff;
-      text-decoration: none;
-    }
-
-    main {
-      padding: 5rem 2rem 3rem;
-      max-width: 600px;
-      margin: 0 auto;
-      flex-grow: 1;
-    }
-
-    h1 {
-      font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 1.4rem;
-      color: #111;
-      text-align: center;
-    }
-
-    /* Form container and sliding cards */
-    .form-container {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 1.8rem 1.6rem 2.2rem;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.07);
-      background: #f9faff;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .slides {
-      display: flex;
-      transition: transform 0.4s ease-in-out;
-      width: 300%; /* 3 slides */
-    }
-
-    .slide {
-      flex: 1 0 100%;
-      padding: 0 0.5rem;
-    }
-
-    /* Form fields styling */
-    label {
-      display: block;
-      margin-bottom: 0.35rem;
-      font-weight: 600;
-      color: #222;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 0.6rem 0.75rem;
-      margin-bottom: 1.2rem;
-      border: 1.6px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #6ea7ff;
-      box-shadow: 0 0 5px #a0c0ff99;
-    }
-
-    /* Buttons */
-    .button-row {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-      gap: 0.8rem;
-    }
-
-    button {
-      cursor: pointer;
-      background-color: #000;
-      color: #fff;
-      border: none;
-      padding: 0.7rem 1.4rem;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 1rem;
-      flex-grow: 1;
-      transition: background-color 0.3s;
-    }
-
-    button:hover:not(:disabled) {
-      background-color: #3a64ff;
-    }
-
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    /* Add pet button */
-    .add-pet-btn {
-      background-color: #3a64ff;
-      margin-bottom: 1rem;
-      width: 100%;
-      font-weight: 600;
-    }
-    .add-pet-btn:hover {
-      background-color: #274dcb;
-    }
-
-    /* Pet card */
-    .pet-card {
-      background: white;
-      border: 1px solid #bbb;
-      border-radius: 6px;
-      padding: 1rem 1.2rem;
-      margin-bottom: 1.2rem;
-      position: relative;
-      box-shadow: 0 3px 6px rgb(0 0 0 / 0.08);
-    }
-    .pet-card h3 {
-      margin-bottom: 0.6rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #333;
-    }
-    .remove-pet-btn {
+  /* HEADER */
+  header {
+    background-color: #000;
+    color: #fff;
+    padding: 0.5rem 2%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+  }
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+  }
+  .brand-name {
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #fff;
+    z-index: 1002;
+  }
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  .nav-links a {
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  @media (max-width: 768px) {
+    .menu-toggle { display: block; }
+    .nav-links {
       position: absolute;
-      top: 8px;
-      right: 12px;
-      background: transparent;
-      border: none;
-      font-size: 1.3rem;
-      color: #ff3b3b;
-      cursor: pointer;
-      font-weight: 700;
-      line-height: 1;
-      padding: 0;
+      top: 3.5rem;
+      left: 0;
+      width: 100%;
+      background-color: rgba(0,0,0,0.95);
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.2rem 0;
+      display: none;
+      animation: slideDown 0.3s ease-out;
     }
-    .remove-pet-btn:hover {
-      color: #d12c2c;
+    .nav-links.show { display: flex; }
+    .nav-links a { font-size: 1.1rem; }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+  }
 
-    /* Error message */
-    .error-msg {
-      color: #d12c2c;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
+  /* MAIN container for form below header */
+  main {
+    margin: 4.5rem auto 3rem;
+    width: 90%;
+    max-width: 600px;
+    flex-grow: 1;
+  }
 
-    /* Success message */
-    .success-msg {
-      color: #2a8f2a;
-      font-weight: 700;
-      margin: 1rem 0;
-      text-align: center;
-    }
+  h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #000;
+  }
+  
+  /* Form container */
+  form {
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 1.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
 
-    /* Step indicators */
-    .step-indicators {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-      gap: 10px;
-    }
-    .step-indicators div {
-      width: 12px;
-      height: 12px;
-      background: #ccc;
-      border-radius: 50%;
-      transition: background-color 0.3s;
-    }
-    .step-indicators div.active {
-      background: #000;
-    }
+  /* Sliding cards container */
+  .slides {
+    display: flex;
+    width: 300%;
+    transition: transform 0.5s ease;
+  }
+  .slide {
+    width: 100%;
+    flex-shrink: 0;
+  }
 
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 1.5rem 1rem;
-      font-size: 0.9rem;
-      color: #555;
-      background-color: #f8f8f8;
-      border-top: 1px solid #eaeaea;
-      margin-top: auto;
-    }
+  /* Form fields */
+  label {
+    display: block;
+    font-weight: 600;
+    margin: 0.6rem 0 0.3rem;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1.5px solid #ccc;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="tel"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    outline: none;
+    border-color: #007BFF;
+  }
 
-    /* Responsive */
-    @media (max-width: 480px) {
-      main {
-        padding: 5rem 1rem 3rem;
-      }
-      button {
-        font-size: 0.9rem;
-        padding: 0.6rem 1rem;
-      }
-    }
-  </style>
+  /* Pet list container */
+  .pet-list {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .pet-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+  }
+  .pet-item button.remove-pet {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background: transparent;
+    border: none;
+    color: #c00;
+    font-weight: 700;
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+
+  /* Buttons */
+  .btn-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  button {
+    padding: 0.7rem 1.3rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    transition: background-color 0.3s ease;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-next {
+    background-color: #007BFF;
+    color: #fff;
+  }
+  .btn-next:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  .btn-prev {
+    background-color: #ddd;
+    color: #111;
+  }
+  .btn-prev:hover {
+    background-color: #bbb;
+  }
+  .btn-add-pet {
+    background-color: #28a745;
+    color: #fff;
+    margin-top: 0.8rem;
+  }
+  .btn-add-pet:hover {
+    background-color: #1e7e34;
+  }
+
+  /* Validation error message */
+  .error-message {
+    color: #c00;
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+  }
+
+  /* Success message */
+  .success-message {
+    color: #28a745;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* Subscription button container */
+  .stripe-checkout {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  .stripe-checkout button {
+    background-color: #B5DBFF;
+    border: none;
+    color: black;
+    font-weight: 700;
+    padding: 0.7rem 2rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .stripe-checkout button:hover {
+    background-color: #87b9f8;
+  }
+
+  /* Area not covered */
+  .area-error {
+    color: #c00;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1.5rem 2%;
+    font-size: 0.9rem;
+    color: #555;
+    background-color: #f8f8f8;
+    border-top: 1px solid #eaeaea;
+    margin-top: auto;
+  }
+  footer div {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+</style>
 </head>
 <body>
 
-  <header>
+<header>
+  <div class="navbar">
     <a href="index.html" class="brand-name">clean canine Co.</a>
-  </header>
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="Reviews.html" onclick="closeMenu()">Reviews</a></li>
+      <li><a href="products.html" onclick="closeMenu()">Products</a></li>
+      <li><a href="Services.html" onclick="closeMenu()">Services</a></li>
+      <li><a href="Book-Appointment.html" onclick="closeMenu()">Memberships</a></li>
+    </ul>
+  </div>
+</header>
 
-  <main>
-    <h1>Become a Clean Canine Member</h1>
+<main>
+  <h1>Join Clean Canine Membership</h1>
 
-    <div class="form-container" aria-label="Membership sign up form">
+  <form id="membershipForm" action="https://formspree.io/f/moqykznp" method="POST">
 
-      <div class="step-indicators" aria-hidden="true">
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-      </div>
+    <div class="slides" id="slides">
 
-      <form id="membership-form">
+      <!-- Slide 1: Customer Info -->
+      <section class="slide" aria-label="Customer Information">
+        <label for="fullName">Full Name *</label>
+        <input type="text" id="fullName" name="Full Name" required />
 
-        <div class="slides" id="slides">
-          <!-- Step 1: Personal Info -->
-          <section class="slide" aria-label="Personal Information">
-            <label for="fullName">Full Name *</label>
-            <input type="text" id="fullName" name="fullName" required autocomplete="name" placeholder="Your full name" />
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="Email" required />
 
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" name="Phone" required pattern="^\+?[0-9\s\-\(\)]{7,15}$" placeholder="+1 555-555-5555" />
+      </section>
 
-            <label for="phone">Phone Number *</label>
-            <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="(555) 123-4567" pattern="[\d\s()+-]{7,15}" />
-          </section>
+      <!-- Slide 2: Pets -->
+      <section class="slide" aria-label="Pets Information">
+        <div id="petList" class="pet-list"></div>
 
-          <!-- Step 2: Pets Info -->
-          <section class="slide" aria-label="Pet Information">
-            <div id="pets-container">
-              <!-- Dynamic pets go here -->
-            </div>
-            <button type="button" class="add-pet-btn" id="addPetBtn" aria-label="Add another pet">+ Add Another Pet</button>
-          </section>
+        <button type="button" class="btn-add-pet" onclick="addPet()">+ Add Pet</button>
+      </section>
 
-          <!-- Step 3: Address & Submit -->
-          <section class="slide" aria-label="Address and Membership Payment">
-            <label for="address">Home Address *</label>
-            <input type="text" id="address" name="address" required placeholder="123 Main St" autocomplete="street-address" />
+      <!-- Slide 3: Address -->
+      <section class="slide" aria-label="Home Address">
+        <label for="address">Street Address *</label>
+        <input type="text" id="address" name="Address" required />
 
-            <label for="city">City *</label>
-            <input type="text" id="city" name="city" required placeholder="Milwaukee" autocomplete="address-level2" />
+        <label for="zip">ZIP Code *</label>
+        <input type="text" id="zip" name="ZIP" required pattern="^\d{5}$" maxlength="5" />
 
-            <label for="state">State *</label>
-            <select id="state" name="state" required autocomplete="address-level1" aria-required="true">
-              <option value="">Select State</option>
-              <option value="WI" selected>Wisconsin</option>
-              <option value="IL">Illinois</option>
-              <option value="MI">Michigan</option>
-              <option value="MN">Minnesota</option>
-              <option value="IA">Iowa</option>
-              <option value="IN">Indiana</option>
-            </select>
-
-            <label for="zip">ZIP Code *</label>
-            <input type="text" id="zip" name="zip" required placeholder="53202" pattern="\d{5}" maxlength="5" autocomplete="postal-code" />
-
-            <div id="area-error" class="error-msg" role="alert" style="display:none;">Sorry, area not covered. We only service within 40 miles of Milwaukee, WI.</div>
-
-            <button type="submit" id="submitBtn" style="margin-top:1.4rem;">Pay $35 / month per pet</button>
-
-            <div id="form-success" class="success-msg" role="alert" style="display:none;">
-              Thank you! Redirecting to payment...
-            </div>
-          </section>
-        </div>
-
-        <div class="button-row">
-          <button type="button" id="prevBtn" disabled aria-label="Previous step">← Previous</button>
-          <button type="button" id="nextBtn" aria-label="Next step">Next →</button>
-        </div>
-      </form>
+        <div id="zipError" class="area-error" style="display:none;">Sorry, area not covered.</div>
+      </section>
     </div>
-  </main>
 
-  <footer>
-    <form style="display: flex; flex-direction: column; max-width: 320px; margin: 0 auto 1rem;" action="https://formspree.io/f/mayvlwnk" method="POST" target="_blank">
-      <label for="subscribe-email" style="font-weight: 600; font-size: 0.9rem; color: #333;">Subscribe to our newsletter</label>
-      <input type="email" id="subscribe-email" name="email" placeholder="Your email" required
-             style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem; margin-bottom: 0.5rem;" />
+    <div class="btn-group">
+      <button type="button" class="btn-prev" onclick="prevSlide()" disabled>← Back</button>
+      <button type="button" class="btn-next" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <!-- Stripe Checkout Button -->
+    <div class="stripe-checkout" style="display:none;">
+      <button id="checkoutBtn" type="button">Subscribe for $35/month</button>
+    </div>
+
+    <!-- Hidden inputs for pets data -->
+    <div id="hiddenPetsData"></div>
+
+  </form>
+</main>
+
+<footer>
+  <div>
+    <form style="display: flex; flex-direction: column; gap: 0.4rem;">
+      <label style="font-weight: 600; font-size: 0.9rem; color: #333;">Subscribe</label>
+      <input type="email" placeholder="Your email" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem;">
       <button type="submit" style="padding: 0.45rem; background-color: #111; color: #fff; border: none; border-radius: 4px; font-size: 0.78rem; cursor: pointer;">Join</button>
+      <p style="font-size: 0.65rem; color: #777; margin: 0.3rem 0 0; line-height: 1.4;">
+        By clicking on "Subscribe", you confirm that you have read and understood our
+        <a href="#" style="text-decoration: underline; color: #666;">Privacy Statement</a>
+        and that you want to receive the newsletter and other marketing communication as set out therein.
+      </p>
     </form>
-    <div style="font-size: 0.65rem; color: #999;">
-      &copy; 2025 Clean Canine Co. All rights reserved.
+    <div style="width: 100%; text-align: right; margin-top: 1rem;">
+      <div style="font-size: 0.65rem; color: #999;">&copy; 2025 Clean Canine Co. All rights reserved.</div>
     </div>
-  </footer>
+  </div>
+</footer>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
-  // Variables
+  // Navigation menu toggle
+  function toggleMenu() {
+    const nav = document.getElementById("navLinks");
+    const toggle = document.getElementById("menuToggle");
+    nav.classList.toggle("show");
+    toggle.classList.toggle("open");
+  }
+  function closeMenu() {
+    const nav = document.getElementById("navLinks");
+    const toggle = document.getElementById("menuToggle");
+    nav.classList.remove("show");
+    toggle.classList.remove("open");
+  }
+
+  // Sliding cards logic
   const slides = document.getElementById('slides');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const form = document.getElementById('membership-form');
-  const stepIndicators = document.querySelectorAll('.step-indicators div');
-  const petsContainer = document.getElementById('pets-container');
-  const addPetBtn = document.getElementById('addPetBtn');
-  const areaError = document.getElementById('area-error');
-  const submitBtn = document.getElementById('submitBtn');
-  const formSuccess = document.getElementById('form-success');
+  const btnPrev = document.querySelector('.btn-prev');
+  const btnNext = document.querySelector('.btn-next');
+  const stripeCheckoutDiv = document.querySelector('.stripe-checkout');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const form = document.getElementById('membershipForm');
+  const zipInput = document.getElementById('zip');
+  const zipError = document.getElementById('zipError');
+  const hiddenPetsData = document.getElementById('hiddenPetsData');
 
-  // Milwaukee ZIP codes (within ~40 miles radius)
-  // For simplicity just checking these zip codes only, you can expand the list
-  // Source: approximate coverage; add more if you want later
-  const allowedZipCodes = new Set([
-    '53202','53203','53204','53205','53206','53207','53208','53209','53210','53211',
-    '53212','53213','53214','53215','53216','53217','53218','53219','53220','53221',
-    '53222','53223','53224','53225','53226','53227','53228','53233','53172','53154',
-    '53189','53188','53177','53110','53144','53158','53186','53132','53153','53129',
-    '53130','53154','53195','53151','53235'
-  ]);
+  let currentSlide = 0;
+  const totalSlides = slides.children.length;
 
-  // Track form step
-  let currentStep = 0;
+  // Predefined ZIPs within 40 miles radius of Milwaukee (central ZIP 53202)
+  // For demo, a simplified subset of ZIP codes near Milwaukee, WI:
+  const milwaukeeZip = 53202;
+  // You can add more ZIPs or do a better lookup based on lat/lon if you want
+  const serviceAreaZips = [
+    53202,53203,53204,53205,53206,53207,53208,53209,53210,53211,53212,53213,53214,
+    53110,53126,53127,53132,53137,53144,53146,53149,53150,53154,53158,53167,53168,
+    53172,53173,53177,53178,53179,53181,53182,53183,53189
+  ];
 
-  // Pet counter for unique IDs
-  let petCount = 0;
+  // Navigation functions
+  function updateSlide() {
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    btnPrev.disabled = currentSlide === 0;
+    btnNext.textContent = currentSlide === totalSlides - 1 ? 'Review & Subscribe →' : 'Next →';
 
-  // Initialize with one pet form
-  addPet();
-
-  function updateStepUI() {
-    slides.style.transform = `translateX(-${currentStep * 100}%)`;
-    prevBtn.disabled = currentStep === 0;
-    nextBtn.style.display = currentStep === 2 ? 'none' : 'inline-block';
-
-    stepIndicators.forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentStep);
-    });
-
-    // Submit button only visible on last step
-    submitBtn.style.display = currentStep === 2 ? 'block' : 'none';
-
-    // Scroll top for accessibility
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Hide stripe checkout button except on last slide & only if ZIP is valid
+    if(currentSlide === totalSlides - 1) {
+      validateZipAndToggleStripe();
+    } else {
+      stripeCheckoutDiv.style.display = 'none';
+      zipError.style.display = 'none';
+    }
+  }
+  function nextSlide() {
+    if (currentSlide === totalSlides - 1) {
+      // On last slide: do nothing, user must click Subscribe button
+      return;
+    }
+    if (validateCurrentSlide()) {
+      currentSlide++;
+      updateSlide();
+    }
+  }
+  function prevSlide() {
+    if (currentSlide === 0) return;
+    currentSlide--;
+    updateSlide();
   }
 
-  prevBtn.addEventListener('click', () => {
-    if (currentStep > 0) {
-      currentStep--;
-      updateStepUI();
-    }
-  });
+  // Validation per slide
+  function validateCurrentSlide() {
+    if (currentSlide === 0) {
+      // Validate customer info
+      const fullName = document.getElementById('fullName');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phone');
 
-  nextBtn.addEventListener('click', () => {
-    if (validateStep(currentStep)) {
-      currentStep++;
-      updateStepUI();
-    }
-  });
+      if (!fullName.value.trim()) { alert('Please enter your full name.'); fullName.focus(); return false; }
+      if (!email.value.trim() || !validateEmail(email.value)) { alert('Please enter a valid email.'); email.focus(); return false; }
+      if (!phone.value.trim() || !validatePhone(phone.value)) { alert('Please enter a valid phone number.'); phone.focus(); return false; }
 
-  function validateStep(step) {
-    let valid = true;
-    if (step === 0) {
-      // Personal info
-      ['fullName', 'email', 'phone'].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el.checkValidity()) {
-          el.reportValidity();
-          valid = false;
-        }
-      });
-    } else if (step === 1) {
-      // At least one pet and all pet fields valid
-      if (petCount === 0) {
+      return true;
+    } else if (currentSlide === 1) {
+      // Validate at least one pet added
+      if (petCount() === 0) {
         alert('Please add at least one pet.');
-        valid = false;
+        return false;
       }
-      // Validate all pet inputs
-      for (let i=0; i<petCount; i++) {
-        const petName = document.getElementById(`petName-${i}`);
-        const petType = document.getElementById(`petType-${i}`);
-        const petAge = document.getElementById(`petAge-${i}`);
-
-        if (!petName || !petType || !petAge) {
-          valid = false;
-          break;
+      // Validate all pets info
+      for (let i = 0; i < petCount(); i++) {
+        const petName = document.getElementById(`petName_${i}`);
+        const petType = document.getElementById(`petType_${i}`);
+        if (!petName.value.trim()) {
+          alert(`Please enter name for pet #${i + 1}.`);
+          petName.focus();
+          return false;
         }
-
-        if (!petName.checkValidity()) {
-          petName.reportValidity();
-          valid = false;
-          break;
-        }
-        if (!petType.checkValidity()) {
-          petType.reportValidity();
-          valid = false;
-          break;
-        }
-        if (!petAge.checkValidity()) {
-          petAge.reportValidity();
-          valid = false;
-          break;
+        if (!petType.value) {
+          alert(`Please select type for pet #${i + 1}.`);
+          petType.focus();
+          return false;
         }
       }
-    } else if (step === 2) {
-      // Address validation + ZIP code radius check
-      ['address', 'city', 'state', 'zip'].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el.checkValidity()) {
-          el.reportValidity();
-          valid = false;
-        }
-      });
-
-      // Check ZIP code in allowed area
-      const zip = document.getElementById('zip').value.trim();
-      if (!allowedZipCodes.has(zip)) {
-        areaError.style.display = 'block';
-        valid = false;
-      } else {
-        areaError.style.display = 'none';
-      }
+      return true;
+    } else if (currentSlide === 2) {
+      // Validate address & zip
+      const address = document.getElementById('address');
+      const zip = document.getElementById('zip');
+      if (!address.value.trim()) { alert('Please enter your street address.'); address.focus(); return false; }
+      if (!zip.value.trim() || !/^\d{5}$/.test(zip.value)) { alert('Please enter a valid 5-digit ZIP code.'); zip.focus(); return false; }
+      return true;
     }
-    return valid;
+    return true;
   }
 
-  // Add a new pet form card
+  // Simple email validation
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+  }
+  // Simple phone validation
+  function validatePhone(phone) {
+    const re = /^\+?[0-9\s\-\(\)]{7,15}$/;
+    return re.test(phone);
+  }
+
+  // Pet list management
+  function petCount() {
+    return document.querySelectorAll('.pet-item').length;
+  }
   function addPet() {
-    const petIndex = petCount;
-    petCount++;
+    const i = petCount();
+    const petList = document.getElementById('petList');
 
-    const petCard = document.createElement('div');
-    petCard.className = 'pet-card';
-    petCard.id = `petCard-${petIndex}`;
-    petCard.innerHTML = `
-      <h3>Pet #${petIndex + 1}</h3>
-      <label for="petName-${petIndex}">Pet Name *</label>
-      <input type="text" id="petName-${petIndex}" name="petName-${petIndex}" required placeholder="Your pet's name" />
+    const petDiv = document.createElement('div');
+    petDiv.className = 'pet-item';
+    petDiv.id = `petItem_${i}`;
+    petDiv.innerHTML = `
+      <button type="button" class="remove-pet" aria-label="Remove pet" onclick="removePet(${i})">&times;</button>
+      <label for="petName_${i}">Pet Name *</label>
+      <input type="text" id="petName_${i}" name="Pet ${i + 1} Name" required />
 
-      <label for="petType-${petIndex}">Pet Type *</label>
-      <select id="petType-${petIndex}" name="petType-${petIndex}" required>
-        <option value="" disabled selected>Select Type</option>
-        <option>Dog</option>
-        <option>Cat</option>
-        <option>Other</option>
+      <label for="petType_${i}">Pet Type *</label>
+      <select id="petType_${i}" name="Pet ${i + 1} Type" required>
+        <option value="" disabled selected>Select pet type</option>
+        <option value="Dog">Dog</option>
+        <option value="Cat">Cat</option>
+        <option value="Other">Other</option>
       </select>
-
-      <label for="petAge-${petIndex}">Pet Age (years) *</label>
-      <input type="number" id="petAge-${petIndex}" name="petAge-${petIndex}" min="0" max="50" required placeholder="e.g. 3" />
-
-      <button type="button" class="remove-pet-btn" aria-label="Remove this pet" title="Remove this pet">&times;</button>
     `;
-
-    petsContainer.appendChild(petCard);
-
-    // Remove pet button handler
-    petCard.querySelector('.remove-pet-btn').addEventListener('click', () => {
-      petsContainer.removeChild(petCard);
-      petCount--;
-      // Re-label pet cards
-      [...petsContainer.children].forEach((card, i) => {
-        card.querySelector('h3').textContent = `Pet #${i + 1}`;
-      });
-    });
+    petList.appendChild(petDiv);
+  }
+  function removePet(i) {
+    const petDiv = document.getElementById(`petItem_${i}`);
+    if(petDiv) petDiv.remove();
   }
 
-  addPetBtn.addEventListener('click', addPet);
-
-  // Handle form submission
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    // Validate last step before submit
-    if (!validateStep(2)) {
+  // ZIP radius check & show Stripe checkout button
+  function validateZipAndToggleStripe() {
+    const zipVal = zipInput.value.trim();
+    if(!/^\d{5}$/.test(zipVal)) {
+      zipError.style.display = 'none';
+      stripeCheckoutDiv.style.display = 'none';
       return;
     }
-
-    // Collect all form data
-    const formData = {
-      fullName: form.fullName.value.trim(),
-      email: form.email.value.trim(),
-      phone: form.phone.value.trim(),
-      pets: [],
-      address: form.address.value.trim(),
-      city: form.city.value.trim(),
-      state: form.state.value,
-      zip: form.zip.value.trim()
-    };
-
-    // Gather pets data
-    for (let i = 0; i < petsContainer.children.length; i++) {
-      const petCard = petsContainer.children[i];
-      formData.pets.push({
-        name: petCard.querySelector(`#petName-${i}`).value.trim(),
-        type: petCard.querySelector(`#petType-${i}`).value,
-        age: petCard.querySelector(`#petAge-${i}`).value.trim(),
-      });
+    const zipNum = parseInt(zipVal, 10);
+    if(serviceAreaZips.includes(zipNum)) {
+      zipError.style.display = 'none';
+      stripeCheckoutDiv.style.display = 'block';
+    } else {
+      zipError.style.display = 'block';
+      stripeCheckoutDiv.style.display = 'none';
     }
+  }
+  zipInput.addEventListener('input', () => {
+    zipError.style.display = 'none';
+    stripeCheckoutDiv.style.display = 'none';
+  });
 
-    // Send form data to your email using Formspree
+  zipInput.addEventListener('blur', () => {
+    validateZipAndToggleStripe();
+  });
+
+  // On checkout button click: compile form data, send to Formspree, then open Stripe checkout
+  checkoutBtn.addEventListener('click', async () => {
+    // Validate address & zip again before submission
+    if(!validateCurrentSlide()) return;
+
+    // Prepare pets data in hidden fields (Formspree only submits form inputs)
+    hiddenPetsData.innerHTML = ''; // Clear
+    const pets = document.querySelectorAll('.pet-item');
+    pets.forEach((pet, index) => {
+      const petName = pet.querySelector(`#petName_${index}`).value.trim();
+      const petType = pet.querySelector(`#petType_${index}`).value;
+      const inputName = document.createElement('input');
+      inputName.type = 'hidden';
+      inputName.name = `Pet ${index + 1} Name`;
+      inputName.value = petName;
+      hiddenPetsData.appendChild(inputName);
+
+      const inputType = document.createElement('input');
+      inputType.type = 'hidden';
+      inputType.name = `Pet ${index + 1} Type`;
+      inputType.value = petType;
+      hiddenPetsData.appendChild(inputType);
+    });
+
+    // Disable button to prevent double clicks
+    checkoutBtn.disabled = true;
+    checkoutBtn.textContent = 'Processing...';
+
+    // Submit form to Formspree using fetch to capture success/error before Stripe
+    const formData = new FormData(form);
     try {
-      await fetch('https://formspree.io/f/mayvlwnk', {
+      const response = await fetch(form.action, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          address: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zip}`,
-          pets: formData.pets.map(p => `${p.name} (${p.type}, Age: ${p.age})`).join('; '),
-        }),
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
       });
-    } catch (err) {
-      alert('Sorry, there was a problem sending your info. Please try again.');
-      return;
-    }
-
-    // Show success message and disable submit
-    submitBtn.disabled = true;
-    formSuccess.style.display = 'block';
-
-    // Start Stripe subscription checkout
-    const stripe = Stripe('pk_test_51RcTWABDLsp0C0Gfv3QRn7VDS8OQzZVZogq9zYZv5v9N2P2xT5kG0JUQMYxYh9k9xpZXU6WPRzVYZP3oOUOiL99ko00nhlI8TVp');
-
-    try {
-      const response = await fetch('/create-subscription-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: formData.pets.length }),
-      });
-      const session = await response.json();
-
-      if (session.error) {
-        alert('Error creating payment session: ' + session.error);
-        submitBtn.disabled = false;
-        formSuccess.style.display = 'none';
-        return;
+      if (response.ok) {
+        // Proceed to Stripe checkout
+        await startStripeCheckout();
+      } else {
+        alert('Oops! There was a problem submitting your info. Please try again.');
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = 'Subscribe for $35/month';
       }
+    } catch (error) {
+      alert('Oops! There was a problem submitting your info. Please try again.');
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = 'Subscribe for $35/month';
+    }
+  });
 
-      // Redirect to Stripe Checkout
-      const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
+  // Stripe setup
+  const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR'); // <-- Replace with your actual Stripe publishable key
+
+  async function startStripeCheckout() {
+    // Call your backend or create checkout session client side here:
+    // For demo, we'll redirect to Stripe's hosted checkout with your price ID:
+    // IMPORTANT: For subscriptions, Stripe recommends creating the checkout session server-side.
+    // Here is a client-only demo using Stripe's client-only method.
+
+    try {
+      const { error } = await stripe.redirectToCheckout({
+        mode: 'subscription',
+        lineItems: [{ price: 'price_1RcrraBDLsp0C0GfLDUaNm0w', quantity: 1 }],
+        successUrl: window.location.origin + '/success.html',
+        cancelUrl: window.location.origin + '/membership.html'
+      });
       if (error) {
         alert(error.message);
-        submitBtn.disabled = false;
-        formSuccess.style.display = 'none';
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = 'Subscribe for $35/month';
       }
-    } catch (err) {
-      alert('There was an error initiating payment. Please try again.');
-      submitBtn.disabled = false;
-      formSuccess.style.display = 'none';
+    } catch (e) {
+      alert('Stripe error: ' + e.message);
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = 'Subscribe for $35/month';
     }
-  });
+  }
 
-  // Initialize UI
-  updateStepUI();
+  // Initialize form - add first pet by default
+  addPet();
+
+  // Initialize slide view
+  updateSlide();
+
 </script>
 
 </body>
 </html>
-
-
