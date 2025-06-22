@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://js.stripe.com/v3/"></script>
   <style>
-    /* ... your existing styles remain unchanged ... */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { max-width: 100%; overflow-x: hidden; }
     body { font-family: 'DM Sans', sans-serif; background: #fff; color: #111; line-height: 1.6; }
@@ -29,12 +28,13 @@
     }
     .products-section {
       width: 96%; margin: 6rem auto 2rem;
-      display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
     }
     .product-card {
       position: relative;
       border: 1px solid #eee; border-radius: 8px; padding: 1rem;
       text-align: center; transition: box-shadow 0.3s ease; background: #fff;
+      cursor: pointer;
     }
     .product-card:hover {
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -104,16 +104,7 @@
     </div>
   </header>
 
-  <section class="products-section" id="products">
-    <!-- Single product -->
-    <div class="product-card">
-      <span class="badge">NEW</span>
-      <img src="https://via.placeholder.com/200?text=Product+1" alt="Product 1" class="product-image">
-      <div class="product-title">Product 1</div>
-      <div class="product-price">$12.00</div>
-      <button class="add-cart" onclick="addToCart('Product 1', 12.00)">Add to Cart</button>
-    </div>
-  </section>
+  <section class="products-section" id="products"></section>
 
   <div id="cart">
     <h4>Your Cart</h4>
@@ -132,7 +123,7 @@
       navLinks.classList.toggle('show');
     }
 
-    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
     function saveCart() {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -156,44 +147,63 @@
       const totalEl = document.getElementById('cart-total');
       container.innerHTML = '';
       let total = 0;
-
       cartItems.forEach((item, index) => {
         total += item.price;
         container.innerHTML += `<p>${item.title} - $${item.price.toFixed(2)} <button class="remove-btn" onclick="removeFromCart(${index})">x</button></p>`;
       });
-
       totalEl.textContent = total.toFixed(2);
     }
 
     function toggleCart(open) {
       const cart = document.getElementById('cart');
-      if (open) {
-        cart.classList.add('open');
-      } else {
-        cart.classList.remove('open');
-      }
+      cart.classList.toggle('open', open);
     }
 
     async function checkout() {
-  try {
-    const response = await fetch('https://clean-canine-1.onrender.com/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: cartItems })
-    });
-
-    const session = await response.json();
-    const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR');
-    await stripe.redirectToCheckout({ sessionId: session.id });
-  } catch (error) {
-    console.error('Checkout error:', error);
-    alert('Something went wrong with checkout.');
-  }
-}
-
+      try {
+        const response = await fetch('https://clean-canine-1.onrender.com/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: cartItems })
+        });
+        const session = await response.json();
+        const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR');
+        await stripe.redirectToCheckout({ sessionId: session.id });
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Something went wrong with checkout.');
+      }
+    }
 
     displayCart();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const products = [
+        { title: 'Paw Balm', price: 10, image: 'https://via.placeholder.com/200?text=Paw+Balm' },
+        { title: 'Flea Collar', price: 15, image: 'https://via.placeholder.com/200?text=Flea+Collar' },
+        { title: 'Shampoo', price: 20, image: 'https://via.placeholder.com/200?text=Shampoo' },
+        { title: 'Toothbrush', price: 8, image: 'https://via.placeholder.com/200?text=Toothbrush' },
+        { title: 'Deodorizing Spray', price: 12, image: 'https://via.placeholder.com/200?text=Spray' },
+        { title: 'Grooming Gloves', price: 14, image: 'https://via.placeholder.com/200?text=Gloves' },
+        { title: 'Dog Cologne', price: 11, image: 'https://via.placeholder.com/200?text=Cologne' },
+        { title: 'Ear Cleaner', price: 13, image: 'https://via.placeholder.com/200?text=Ear+Cleaner' },
+        { title: 'Nail Clippers', price: 9, image: 'https://via.placeholder.com/200?text=Nail+Clippers' }
+      ];
+
+      const container = document.getElementById('products');
+      products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.title}" class="product-image">
+          <div class="product-title">${p.title}</div>
+          <div class="product-price">$${p.price.toFixed(2)}</div>
+          <button class="add-cart" onclick="addToCart('${p.title}', ${p.price})">Add to Cart</button>
+        `;
+        card.onclick = () => window.location.href = `details.html?title=${encodeURIComponent(p.title)}`;
+        container.appendChild(card);
+      });
+    });
   </script>
 </body>
 </html>
-
