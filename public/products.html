@@ -28,7 +28,7 @@
     }
     .products-section {
       width: 96%; margin: 6rem auto 2rem;
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
     }
     .product-card {
       position: relative;
@@ -118,12 +118,11 @@
   </footer>
 
   <script>
-    function toggleMenu() {
-      const navLinks = document.querySelector('.nav-links');
-      navLinks.classList.toggle('show');
-    }
-
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('show');
+    }
 
     function saveCart() {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -155,8 +154,7 @@
     }
 
     function toggleCart(open) {
-      const cart = document.getElementById('cart');
-      cart.classList.toggle('open', open);
+      document.getElementById('cart').classList.toggle('open', open);
     }
 
     async function checkout() {
@@ -198,12 +196,13 @@
           <img src="${p.image}" alt="${p.title}" class="product-image">
           <div class="product-title">${p.title}</div>
           <div class="product-price">$${p.price.toFixed(2)}</div>
-          <button class="add-cart" onclick="addToCart('${p.title}', ${p.price})">Add to Cart</button>
+          <button class="add-cart" onclick="addToCart('${p.title}', ${p.price}); event.stopPropagation();">Add to Cart</button>
         `;
-        card.onclick = () => window.location.href = `details.html?title=${encodeURIComponent(p.title)}`;
+        card.onclick = () => alert(`${p.title} - Enlarged view with 2 image carousel coming soon.`);
         container.appendChild(card);
       });
     });
   </script>
 </body>
 </html>
+
