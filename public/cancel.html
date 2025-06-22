@@ -1,9 +1,80 @@
 <!DOCTYPE html>
-<html>
-<head><title>Payment Cancelled</title></head>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Candles | Clean Canine Co.</title>
+
+<style>
+  /* Full-screen background and centering */
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'DM Sans', sans-serif;
+    color: white;
+  }
+  body {
+    /* Default desktop background */
+    background: url('https://yourdomain.com/images/candles-desktop.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  /* Mobile background override */
+  @media (max-width: 768px) {
+    body {
+      background: url('https://yourdomain.com/images/candles-mobile.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+  }
+
+  .content {
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black for text readability */
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    max-width: 600px;
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  a.back-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: 2px solid white;
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  a.back-link:hover {
+    color: #bbb;
+    border-color: #bbb;
+  }
+</style>
+
+</head>
 <body>
-  <h1>Payment Cancelled</h1>
-  <p>Your payment was cancelled. You can try again anytime.</p>
-  <a href="https://clean-canine-1.onrender.com/products.html">Back to Products</a>
+
+  <div class="content">
+    <h1>Candles Collection</h1>
+    <p>Explore our beautifully scented candles for a cozy atmosphere.</p>
+    <a href="products.html" class="back-link">Back to Products</a>
+  </div>
+
 </body>
 </html>
+
