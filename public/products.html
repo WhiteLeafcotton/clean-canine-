@@ -175,21 +175,22 @@
     }
 
     async function checkout() {
-      try {
-        const response = await fetch('http://localhost:4242/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: cartItems })
-        });
+  try {
+    const response = await fetch('https://clean-canine-1.onrender.com/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: cartItems })
+    });
 
-        const session = await response.json();
-        const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR');
-        await stripe.redirectToCheckout({ sessionId: session.id });
-      } catch (error) {
-        console.error('Checkout error:', error);
-        alert('Something went wrong with checkout.');
-      }
-    }
+    const session = await response.json();
+    const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR');
+    await stripe.redirectToCheckout({ sessionId: session.id });
+  } catch (error) {
+    console.error('Checkout error:', error);
+    alert('Something went wrong with checkout.');
+  }
+}
+
 
     displayCart();
   </script>
