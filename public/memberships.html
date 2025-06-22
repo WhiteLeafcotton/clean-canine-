@@ -1,74 +1,276 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Membership | Clean Canine Co.</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://js.stripe.com/v3/"></script>
   <style>
-    /* Paste your existing header + footer CSS and layout styling here */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { max-width: 100%; overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #000;
+      color: #fff;
+      padding: 0.5rem 2%;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #fff;
+      z-index: 1002;
+    }
+
+    .menu-toggle.open::before {
+      content: "✖";
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    main {
+      margin-top: 6rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    main h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    main p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    #subscribeBtn {
+      padding: 0.7rem 1.4rem;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #subscribeBtn:hover {
+      background-color: #444;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 0;
+      font-size: 0.9rem;
+      color: #555;
+      background-color: #f8f8f8;
+      border-top: 1px solid #eaeaea;
+    }
+
+    footer > div {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    footer form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    footer label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    footer input[type="email"] {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    footer button[type="submit"] {
+      padding: 0.45rem;
+      background-color: #111;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    footer button[type="submit"]:hover {
+      background-color: #333;
+    }
+
+    footer p {
+      font-size: 0.65rem;
+      color: #777;
+      margin: 0.3rem 0 0;
+      line-height: 1.4;
+    }
+
+    footer p a {
+      text-decoration: underline;
+      color: #666;
+    }
+
+    footer > div:last-child {
+      width: 100%;
+      text-align: right;
+      margin-top: 1rem;
+      font-size: 0.65rem;
+      color: #999;
+    }
+
+    /* Responsive navigation menu */
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 3.5rem;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        padding: 1.2rem 0;
+        display: none;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-links a {
+        font-size: 1.1rem;
+        padding: 0.4rem 0;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="navbar">
       <a href="index.html" class="brand-name">clean canine Co.</a>
       <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">☰</div>
       <ul class="nav-links" id="navLinks">
         <li><a href="Reviews.html" onclick="closeMenu()">Reviews</a></li>
-        <li><a href="products.html" onclick="closeMenu()">Products</a></li>
         <li><a href="Services.html" onclick="closeMenu()">Services</a></li>
+        <li><a href="products.html" onclick="closeMenu()">Products</a></li>
         <li><a href="membership.html" onclick="closeMenu()">Membership</a></li>
       </ul>
     </div>
   </header>
 
-  <!-- Membership Content -->
-  <main style="margin-top: 6rem; padding: 2rem; text-align: center;">
+  <main>
     <h1>Join the Pack</h1>
     <p>Get monthly grooming perks like nail trims, paw cleanups, and more for just $35/month.</p>
-    
-    <button id="subscribeBtn" style="margin-top: 1.5rem; padding: 0.7rem 1.4rem; background-color: #000; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer;">
-      Subscribe for $35/month
-    </button>
+
+    <button id="subscribeBtn">Subscribe for $35/month</button>
   </main>
 
-  <!-- Footer -->
   <footer>
-    <div style="max-width: 1200px; margin: auto; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: flex-start;">
-      <div style="flex: 1; min-width: 250px;">
-        <form style="display: flex; flex-direction: column; gap: 0.4rem;">
-          <label style="font-weight: 600; font-size: 0.9rem; color: #333;">Subscribe</label>
-          <input type="email" placeholder="Your email" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem;">
-          <button type="submit" style="padding: 0.45rem; background-color: #111; color: #fff; border: none; border-radius: 4px; font-size: 0.78rem; cursor: pointer;">Join</button>
-          <p style="font-size: 0.65rem; color: #777; margin: 0.3rem 0 0;">
-            By clicking "Subscribe", you agree to receive marketing from Clean Canine Co.
-          </p>
-        </form>
+    <div>
+      <form>
+        <label for="subscribeEmail">Subscribe</label>
+        <input id="subscribeEmail" type="email" placeholder="Your email" />
+        <button type="submit">Join</button>
+        <p>
+          By clicking on "Subscribe", you confirm that you have read and understood our
+          <a href="#">Privacy Statement</a> and that you want to receive the newsletter and other marketing communication as set out therein.
+        </p>
+      </form>
+      <div style="margin-top: 0.4rem; display: flex; gap: 0.4rem;">
+        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
+        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
+        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
+        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/pinterest.svg" alt="Pinterest" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
+        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
       </div>
-
-      <div style="width: 100%; text-align: right; margin-top: 1rem;">
-        <div style="font-size: 0.65rem; color: #999;">
-          &copy; 2025 Clean Canine Co. All rights reserved.
-        </div>
-      </div>
+    </div>
+    <div>
+      &copy; 2025 Clean Canine Co. All rights reserved.
     </div>
   </footer>
 
   <script>
     function toggleMenu() {
-      document.getElementById("navLinks").classList.toggle("show");
-      document.getElementById("menuToggle").classList.toggle("open");
+      const nav = document.getElementById("navLinks");
+      const toggle = document.getElementById("menuToggle");
+      nav.classList.toggle("show");
+      toggle.classList.toggle("open");
     }
 
     function closeMenu() {
-      document.getElementById("navLinks").classList.remove("show");
-      document.getElementById("menuToggle").classList.remove("open");
+      const nav = document.getElementById("navLinks");
+      const toggle = document.getElementById("menuToggle");
+      nav.classList.remove("show");
+      toggle.classList.remove("open");
     }
 
     document.getElementById("subscribeBtn").addEventListener("click", async () => {
@@ -88,30 +290,3 @@
   </script>
 </body>
 </html>
-```
-
----
-
-### ✅ Server-side (`/create-subscription-session` endpoint):
-
-This will **not affect your product one-time payments**. Just add a new POST route alongside your existing `/create-checkout-session` route:
-
-```js
-// server.js (Node.js + Express)
-app.post('/create-subscription-session', async (req, res) => {
-  const { priceId } = req.body;
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: 'https://yourdomain.com/success.html',
-      cancel_url: 'https://yourdomain.com/cancel.html',
-    });
-
-    res.json({ id: session.id });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Subscription session creation failed' });
-  }
-});
-```
