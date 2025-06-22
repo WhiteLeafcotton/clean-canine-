@@ -31,16 +31,13 @@
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
     }
     .product-card {
-      position: relative;
-      border: 1px solid #eee; border-radius: 8px; padding: 0;
-      text-align: center; transition: box-shadow 0.3s ease; background: #fff;
-      cursor: pointer; overflow: hidden; display: flex; flex-direction: column;
-    }
-    .product-card:hover {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border: none; border-radius: 8px; overflow: hidden; cursor: pointer;
     }
     .product-image {
-      width: 100%; height: 100%; object-fit: cover;
+      width: 100%; height: 300px; object-fit: cover;
+    }
+    .product-title, .product-price, .add-cart {
+      text-align: center; display: block;
     }
     .product-title { font-size: 1rem; font-weight: 600; margin-top: 0.5rem; }
     .product-price { font-size: 0.9rem; color: #333; margin-bottom: 0.6rem; }
@@ -75,9 +72,13 @@
     }
     #modal.active { display: flex; }
     .carousel {
-      background: #fff; padding: 1rem; border-radius: 8px; max-width: 80%; position: relative;
+      background: #fff; padding: 1rem; border-radius: 8px;
+      width: 90vw; height: 90vh;
+      display: flex; align-items: center; justify-content: center; position: relative;
     }
-    .carousel img { width: 100%; max-height: 400px; object-fit: cover; }
+    .carousel img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
     .carousel button {
       position: absolute; top: 50%; transform: translateY(-50%);
       background: rgba(0,0,0,0.5); color: white; border: none; padding: 0.5rem;
@@ -104,7 +105,7 @@
 <body>
   <header>
     <div class="navbar">
-      <a href="#" class="brand-name">clean canine Co.</a>
+      <a href="#" class="brand-name">Clean Canine Co.</a>
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
       <ul class="nav-links">
         <li><a href="#">Reviews</a></li>
@@ -126,10 +127,10 @@
 
   <div id="modal">
     <div class="carousel">
-      <button class="close" onclick="toggleModal(false)">✕</button>
-      <button class="prev" onclick="navigateCarousel(-1)">&lt;</button>
-      <img id="carousel-img" src="" alt="Product Detail">
-      <button class="next" onclick="navigateCarousel(1)">&gt;</button>
+      <button class="close" onclick="closeModal()">X</button>
+      <button class="prev" onclick="prevImage()">◀</button>
+      <img id="carousel-image" src="" alt="Product Detail">
+      <button class="next" onclick="nextImage()">▶</button>
     </div>
   </div>
 
@@ -138,72 +139,56 @@
   </footer>
 
   <script>
-    const products = Array.from({ length: 9 }).map((_, i) => {
-      const id = i + 1;
-      return {
-        title: `Product ${id}`,
-        price: 10 + id,
-        image: `https://via.placeholder.com/300x300?text=Product+${id}`,
-        detailImages: [
-          `https://via.placeholder.com/600x400?text=Detail+${id}-1`,
-          `https://via.placeholder.com/600x400?text=Detail+${id}-2`
-        ]
-      };
+    const navLinks = document.querySelector('.nav-links');
+    function toggleMenu() {
+      navLinks.classList.toggle('show');
+    }
+
+    const products = Array.from({ length: 9 }, (_, i) => ({
+      title: `Product ${i + 1}`,
+      price: 10 + i * 5,
+      images: [
+        `https://via.placeholder.com/600x600?text=Product+${i + 1}+Image+1`,
+        `https://via.placeholder.com/600x600?text=Product+${i + 1}+Image+2`
+      ]
+    }));
+
+    const productsContainer = document.getElementById('products');
+    products.forEach((product, index) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${product.images[0]}" class="product-image" onclick="openModal(${index})">
+        <div class="product-title">${product.title}</div>
+        <div class="product-price">$${product.price.toFixed(2)}</div>
+        <button class="add-cart" onclick="addToCart('${product.title}', ${product.price})">Add to Cart</button>
+      `;
+      productsContainer.appendChild(card);
     });
 
-    let currentImages = [], currentIndex = 0;
-
-    function toggleModal(show) {
-      document.getElementById('modal').classList.toggle('active', show);
-      if (show) document.getElementById('carousel-img').src = currentImages[currentIndex];
-    }
-
-    function navigateCarousel(dir) {
-      currentIndex = (currentIndex + dir + currentImages.length) % currentImages.length;
-      document.getElementById('carousel-img').src = currentImages[currentIndex];
-    }
-
-    function toggleMenu() {
-      document.querySelector('.nav-links').classList.toggle('show');
-    }
-
     let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-
-    function saveCart() {
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }
-
+    function saveCart() { localStorage.setItem('cartItems', JSON.stringify(cartItems)); }
     function addToCart(title, price) {
       cartItems.push({ title, price: parseFloat(price), quantity: 1 });
-      saveCart();
-      displayCart();
-      toggleCart(true);
+      saveCart(); displayCart(); toggleCart(true);
     }
-
     function removeFromCart(index) {
-      cartItems.splice(index, 1);
-      saveCart();
-      displayCart();
+      cartItems.splice(index, 1); saveCart(); displayCart();
     }
-
     function displayCart() {
       const container = document.getElementById('cart-items');
       const totalEl = document.getElementById('cart-total');
-      container.innerHTML = '';
-      let total = 0;
+      container.innerHTML = ''; let total = 0;
       cartItems.forEach((item, index) => {
         total += item.price;
         container.innerHTML += `<p>${item.title} - $${item.price.toFixed(2)} <button class="remove-btn" onclick="removeFromCart(${index})">x</button></p>`;
       });
       totalEl.textContent = total.toFixed(2);
     }
-
     function toggleCart(open) {
       const cart = document.getElementById('cart');
-      if (open) cart.classList.add('open');
-      else cart.classList.remove('open');
+      cart.classList.toggle('open', open);
     }
-
     async function checkout() {
       try {
         const response = await fetch('https://clean-canine-1.onrender.com/create-checkout-session', {
@@ -220,27 +205,30 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('products');
-      container.innerHTML = '';
-      products.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <img src="${p.image}" alt="${p.title}" class="product-image">
-          <div class="product-title">${p.title}</div>
-          <div class="product-price">$${p.price.toFixed(2)}</div>
-          <button class="add-cart" onclick="addToCart('${p.title}', ${p.price}); event.stopPropagation();">Add to Cart</button>
-        `;
-        card.onclick = () => {
-          currentImages = p.detailImages;
-          currentIndex = 0;
-          toggleModal(true);
-        };
-        container.appendChild(card);
-      });
-      displayCart();
-    });
+    let currentImages = [];
+    let currentImageIndex = 0;
+    function openModal(index) {
+      currentImages = products[index].images;
+      currentImageIndex = 0;
+      updateCarousel();
+      document.getElementById('modal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+    function updateCarousel() {
+      document.getElementById('carousel-image').src = currentImages[currentImageIndex];
+    }
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+      updateCarousel();
+    }
+    function prevImage() {
+      currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+      updateCarousel();
+    }
+
+    displayCart();
   </script>
 </body>
 </html>
