@@ -124,8 +124,21 @@
       font-size: 0.85rem;
       margin-top: 0.4rem;
     }
-    .checkout-btn:hover {
+
+    .checkout-btn {
+      margin-top: 1rem;
       background-color: #B5DBFF;
+      color: black;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.85rem;
+    }
+
+    .checkout-btn:hover {
+      background-color: #a0cfff;
     }
 
     .lightbox {
@@ -135,33 +148,64 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 0.85);
       z-index: 2000;
       justify-content: center;
       align-items: center;
+      padding: 1rem;
     }
 
     .lightbox-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
       display: flex;
-      gap: 1rem;
-      width: 90vw;
-      height: 90vh;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     .lightbox-content img {
-      width: 50%;
-      height: 100%;
+      width: 100%;
+      height: auto;
+      max-height: 90vh;
       object-fit: contain;
+      border-radius: 8px;
     }
 
     .lightbox-close {
       position: absolute;
-      top: 2rem;
-      right: 2rem;
+      top: 1rem;
+      right: 1rem;
       color: #000;
-      font-size: 2rem;
+      font-size: 2.2rem;
       cursor: pointer;
+      z-index: 10;
     }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      font-size: 2.2rem;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 10;
+      transition: background 0.2s ease;
+    }
+
+    .carousel-nav:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .carousel-nav.prev { left: 1rem; }
+    .carousel-nav.next { right: 1rem; }
 
     #cart {
       position: fixed;
@@ -192,25 +236,12 @@
     }
 
     .remove-btn {
-     background: transparent;  /* Removes any background */
-     color: black;             /* Sets the "x" to black */
-     border: none;
-     font-size: 0.7rem;        /* Slightly larger, adjust as needed */
-     margin-left: 0.5rem;
-     cursor: pointer;
-    }
-
-
-    .checkout-btn {
-      margin-top: 1rem;
-      background-color: #B5DBFF;
+      background: transparent;
       color: black;
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
       cursor: pointer;
-      width: 100%;
-      font-size: 0.85rem;
     }
 
     .cart-close {
@@ -221,42 +252,6 @@
       color: #B5DBFF;
       font-size: 1.2rem;
     }
- .carousel {
-  position: relative;
-  width: 80%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.carousel-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.4);
-  border: none;
-  color: white;
-  font-size: 2rem;
-  padding: 0.2rem 0.8rem;
-  cursor: pointer;
-  z-index: 5;
-  border-radius: 6px;
-}
-
-.carousel-nav.prev {
-  left: 0.5rem;
-}
-
-.carousel-nav.next {
-  right: 0.5rem;
-}
 
     footer {
       text-align: center;
@@ -269,7 +264,6 @@
 
     @media (max-width: 768px) {
       .menu-toggle { display: block; }
-
       .nav-links {
         position: absolute;
         top: 3.5rem;
@@ -283,42 +277,31 @@
         display: none;
         animation: slideDown 0.3s ease-out;
       }
-
-      .nav-links.show {
-        display: flex;
-      }
-
+      .nav-links.show { display: flex; }
       .nav-links a {
         font-size: 1.1rem;
         padding: 0.4rem 0;
         color: #fff;
-        text-decoration: none;
       }
-
       @keyframes slideDown {
         from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
       }
-
       .products-section {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.6rem;
       }
+    }
 
-      .product-title { font-size: 0.85rem; }
-      .product-price { font-size: 0.8rem; }
-      .add-cart {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.6rem;
-      }
-
-      .product-info {
-        padding: 0.3rem;
+    @media (max-width: 480px) {
+      .products-section {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
+
   <header>
     <div class="navbar">
       <a href="index.html" class="brand-name">clean canine Co.</a>
@@ -345,166 +328,158 @@
   <div class="lightbox" id="lightbox">
     <div class="lightbox-close" onclick="closeLightbox()">✖</div>
     <div class="lightbox-content">
-  <button class="carousel-nav prev" onclick="prevSlide()">‹</button>
-  <img src="" id="carousel-image" />
-  <button class="carousel-nav next" onclick="nextSlide()">›</button>
-</div>
-
-
-  <footer>
-  <div style="max-width: 1200px; margin: auto; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: flex-start;">
-    <div style="flex: 1; min-width: 250px;">
-      <form style="display: flex; flex-direction: column; gap: 0.4rem;">
-        <label style="font-weight: 600; font-size: 0.9rem; color: #333;">Subscribe</label>
-        <input type="email" placeholder="Your email" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem;">
-        <button type="submit" style="padding: 0.45rem; background-color: #111; color: #fff; border: none; border-radius: 4px; font-size: 0.78rem; cursor: pointer;">Join</button>
-        <p style="font-size: 0.65rem; color: #777; margin: 0.3rem 0 0; line-height: 1.4;">
-          By clicking on "Subscribe", you confirm that you have read and understood our 
-          <a href="#" style="text-decoration: underline; color: #666;">Privacy Statement</a> 
-          and that you want to receive the newsletter and other marketing communication as set out therein.
-        </p>
-        <div style="margin-top: 0.4rem; display: flex; gap: 0.4rem;">
-          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
-          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
-          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
-          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/pinterest.svg" alt="Pinterest" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
-          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
-        </div>
-      </form>
-    </div>
-
-    <div style="width: 100%; text-align: right; margin-top: 1rem;">
-      <div style="font-size: 0.65rem; color: #999;">
-        &copy; 2025 Clean Canine Co. All rights reserved.
-      </div>
+      <button class="carousel-nav prev" onclick="prevSlide()">‹</button>
+      <img src="" id="carousel-image" />
+      <button class="carousel-nav next" onclick="nextSlide()">›</button>
     </div>
   </div>
-</footer>
 
-
+  <footer>
+    <div style="max-width: 1200px; margin: auto; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: flex-start;">
+      <div style="flex: 1; min-width: 250px;">
+        <form style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label style="font-weight: 600; font-size: 0.9rem; color: #333;">Subscribe</label>
+          <input type="email" placeholder="Your email" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem;">
+          <button type="submit" style="padding: 0.45rem; background-color: #111; color: #fff; border: none; border-radius: 4px; font-size: 0.78rem; cursor: pointer;">Join</button>
+          <p style="font-size: 0.65rem; color: #777; margin: 0.3rem 0 0; line-height: 1.4;">
+            By clicking "Join" you agree to our <a href="#" style="text-decoration: underline; color: #666;">Privacy Statement</a>.
+          </p>
+          <div style="margin-top: 0.4rem; display: flex; gap: 0.4rem;">
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;"></a>
+          </div>
+        </form>
+      </div>
+      <div style="width: 100%; text-align: right; margin-top: 1rem;">
+        <div style="font-size: 0.65rem; color: #999;">
+          &copy; 2025 Clean Canine Co. All rights reserved.
+        </div>
+      </div>
+    </div>  
+  </footer>
 
   <script>
     const products = [
-      { title: 'Nourish Balm', price: 12, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Nourish+1', detail2: 'https://via.placeholder.com/800x1200?text=Nourish+2' },
-      { title: 'Paw Cleanser', price: 10, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Paw+1', detail2: 'https://via.placeholder.com/800x1200?text=Paw+2' },
-      { title: 'Shampoo', price: 14, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Shampoo+1', detail2: 'https://via.placeholder.com/800x1200?text=Shampoo+2' },
-      { title: 'Breath Spray', price: 9, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Spray+1', detail2: 'https://via.placeholder.com/800x1200?text=Spray+2' },
-      { title: 'Flea Comb', price: 7, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Comb+1', detail2: 'https://via.placeholder.com/800x1200?text=Comb+2' },
-      { title: 'DO Spray', price: 11, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Deo+1', detail2: 'https://via.placeholder.com/800x1200?text=Deo+2' },
-      { title: 'Pet Wipes', price: 8, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Wipes+1', detail2: 'https://via.placeholder.com/800x1200?text=Wipes+2' },
-      { title: 'Ear Cleaner', price: 13, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Ear+1', detail2: 'https://via.placeholder.com/800x1200?text=Ear+2' },
-      { title: 'heartworm', price: 35, img: 'https://github.com/WhiteLeafcotton/clean-canine-/blob/main/public/Summer%20Sale-6.png?raw=true', detail1: 'https://via.placeholder.com/800x1200?text=Pass+1', detail2: 'https://via.placeholder.com/800x1200?text=Pass+2' }
-    ];
+      { title: 'Nourish Balm', price: 12, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Nourish+1', detail2: 'https://via.placeholder.com/800x1200?text=Nourish+2' },
+      { title: 'Paw Cleanser to
+<script>
+  const products = [
+    { title: 'Nourish Balm', price: 12, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Nourish+1', detail2: 'https://via.placeholder.com/800x1200?text=Nourish+2' },
+    { title: 'Paw Cleanser', price: 10, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Paw+1', detail2: 'https://via.placeholder.com/800x1200?text=Paw+2' },
+    { title: 'Shampoo', price: 14, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Shampoo+1', detail2: 'https://via.placeholder.com/800x1200?text=Shampoo+2' },
+    { title: 'Breath Spray', price: 9, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Spray+1', detail2: 'https://via.placeholder.com/800x1200?text=Spray+2' },
+    { title: 'Flea Comb', price: 7, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Comb+1', detail2: 'https://via.placeholder.com/800x1200?text=Comb+2' },
+    { title: 'DO Spray', price: 11, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Deo+1', detail2: 'https://via.placeholder.com/800x1200?text=Deo+2' },
+    { title: 'Pet Wipes', price: 8, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Wipes+1', detail2: 'https://via.placeholder.com/800x1200?text=Wipes+2' },
+    { title: 'Ear Cleaner', price: 13, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Ear+1', detail2: 'https://via.placeholder.com/800x1200?text=Ear+2' },
+    { title: 'Heartworm', price: 35, img: 'https://via.placeholder.com/300', detail1: 'https://via.placeholder.com/800x1200?text=Pass+1', detail2: 'https://via.placeholder.com/800x1200?text=Pass+2' }
+  ];
 
-    const productsContainer = document.getElementById('products');
-    products.forEach((product) => {
-      const card = document.createElement('div');
-      card.className = 'product-card';
-      card.innerHTML = `
-        <img src="${product.img}" alt="${product.title}" class="product-image" onclick="showDetails('${product.detail1}', '${product.detail2}')">
-        <div class="product-info">
-          <div class="product-title">${product.title}</div>
-          <div class="product-price">$${product.price.toFixed(2)}</div>
-          <button class="add-cart" onclick="addToCart('${product.title}', ${product.price})">Add to Cart</button>
-        </div>
-      `;
-      productsContainer.appendChild(card);
-    });
+  const productsContainer = document.getElementById('products');
+  products.forEach((product) => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+      <img src="${product.img}" alt="${product.title}" class="product-image" onclick="showDetails('${product.detail1}', '${product.detail2}')">
+      <div class="product-info">
+        <div class="product-title">${product.title}</div>
+        <div class="product-price">$${product.price.toFixed(2)}</div>
+        <button class="add-cart" onclick="addToCart('${product.title}', ${product.price})">Add to Cart</button>
+      </div>`;
+    productsContainer.appendChild(card);
+  });
 
-    function toggleMenu() {
-      const nav = document.getElementById("navLinks");
-      const toggle = document.getElementById("menuToggle");
-      nav.classList.toggle("show");
-      toggle.classList.toggle("open");
-    }
+  let slideImages = [];
+  let currentSlideIndex = 0;
 
-    function closeMenu() {
-      const nav = document.getElementById("navLinks");
-      const toggle = document.getElementById("menuToggle");
-      nav.classList.remove("show");
-      toggle.classList.remove("open");
-    }
+  function showDetails(img1, img2) {
+    slideImages = [img1, img2];
+    currentSlideIndex = 0;
+    document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
+    document.getElementById('lightbox').style.display = 'flex';
+  }
 
-    let slideImages = [];
-let currentSlideIndex = 0;
+  function nextSlide() {
+    currentSlideIndex = (currentSlideIndex + 1) % slideImages.length;
+    document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
+  }
 
-function showDetails(img1, img2) {
-  slideImages = [img1, img2];
-  currentSlideIndex = 0;
-  document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
-  document.getElementById('lightbox').style.display = 'flex';
-}
+  function prevSlide() {
+    currentSlideIndex = (currentSlideIndex - 1 + slideImages.length) % slideImages.length;
+    document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
+  }
 
-function nextSlide() {
-  currentSlideIndex = (currentSlideIndex + 1) % slideImages.length;
-  document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
-}
+  function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+  }
 
-function prevSlide() {
-  currentSlideIndex = (currentSlideIndex - 1 + slideImages.length) % slideImages.length;
-  document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
-}
+  function toggleMenu() {
+    const nav = document.getElementById("navLinks");
+    const toggle = document.getElementById("menuToggle");
+    nav.classList.toggle("show");
+    toggle.classList.toggle("open");
+  }
 
+  function closeMenu() {
+    const nav = document.getElementById("navLinks");
+    const toggle = document.getElementById("menuToggle");
+    nav.classList.remove("show");
+    toggle.classList.remove("open");
+  }
 
-    function closeLightbox() {
-      document.getElementById('lightbox').style.display = 'none';
-    }
+  let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  function saveCart() {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }
 
-    function saveCart() {
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }
-
-    function addToCart(title, price) {
-      cartItems.push({ title, price: parseFloat(price), quantity: 1 });
-      saveCart();
-      displayCart();
-      toggleCart(true);
-    }
-
-    function removeFromCart(index) {
-      cartItems.splice(index, 1);
-      saveCart();
-      displayCart();
-    }
-
-    function displayCart() {
-      const container = document.getElementById('cart-items');
-      const totalEl = document.getElementById('cart-total');
-      container.innerHTML = '';
-      let total = 0;
-
-      cartItems.forEach((item, index) => {
-        total += item.price;
-        container.innerHTML += `<p>${item.title} - $${item.price.toFixed(2)} <button class="remove-btn" onclick="removeFromCart(${index})">x</button></p>`;
-      });
-
-      totalEl.textContent = total.toFixed(2);
-    }
-
-    function toggleCart(open) {
-      const cart = document.getElementById('cart');
-      cart.classList.toggle('open', open);
-    }
-
-    async function checkout() {
-      try {
-        const response = await fetch('https://clean-canine-1.onrender.com/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: cartItems })
-        });
-        const session = await response.json();
-        const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR');
-        await stripe.redirectToCheckout({ sessionId: session.id });
-      } catch (error) {
-        console.error('Checkout error:', error);
-        alert('Something went wrong with checkout.');
-      }
-    }
-
+  function addToCart(title, price) {
+    cartItems.push({ title, price: parseFloat(price), quantity: 1 });
+    saveCart();
     displayCart();
-  </script>
-</body>
-</html>
+    toggleCart(true);
+  }
+
+  function removeFromCart(index) {
+    cartItems.splice(index, 1);
+    saveCart();
+    displayCart();
+  }
+
+  function displayCart() {
+    const container = document.getElementById('cart-items');
+    const totalEl = document.getElementById('cart-total');
+    container.innerHTML = '';
+    let total = 0;
+    cartItems.forEach((item, index) => {
+      total += item.price;
+      container.innerHTML += `<p>${item.title} - $${item.price.toFixed(2)} <button class="remove-btn" onclick="removeFromCart(${index})">x</button></p>`;
+    });
+    totalEl.textContent = total.toFixed(2);
+  }
+
+  function toggleCart(open) {
+    const cart = document.getElementById('cart');
+    cart.classList.toggle('open', open);
+  }
+
+  async function checkout() {
+    try {
+      const response = await fetch('https://clean-canine-1.onrender.com/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cartItems })
+      });
+      const session = await response.json();
+      const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR');
+      await stripe.redirectToCheckout({ sessionId: session.id });
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Something went wrong with checkout.');
+    }
+  }
+
+  displayCart();
+</script>
+
