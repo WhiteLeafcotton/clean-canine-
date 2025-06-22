@@ -424,11 +424,26 @@
       toggle.classList.remove("open");
     }
 
-    function showDetails(img1, img2) {
-      document.getElementById('lightbox-img1').src = img1;
-      document.getElementById('lightbox-img2').src = img2;
-      document.getElementById('lightbox').style.display = 'flex';
-    }
+    let slideImages = [];
+let currentSlideIndex = 0;
+
+function showDetails(img1, img2) {
+  slideImages = [img1, img2];
+  currentSlideIndex = 0;
+  document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
+  document.getElementById('lightbox').style.display = 'flex';
+}
+
+function nextSlide() {
+  currentSlideIndex = (currentSlideIndex + 1) % slideImages.length;
+  document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
+}
+
+function prevSlide() {
+  currentSlideIndex = (currentSlideIndex - 1 + slideImages.length) % slideImages.length;
+  document.getElementById('carousel-image').src = slideImages[currentSlideIndex];
+}
+
 
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
