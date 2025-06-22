@@ -1,3 +1,6 @@
+Sure! Here's your full membership page HTML with the updated footer that matches your products page mobile footer style, including all the benefits card and subscription button:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -148,14 +151,13 @@
       background-color: #444;
     }
 
-    /* Updated footer style for desktop and mobile */
     footer > div {
       max-width: 1200px;
       margin: auto;
       display: flex;
-      flex-direction: column;   /* stack vertically */
-      align-items: center;      /* center horizontally */
-      text-align: center;       /* center text */
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: flex-start;
       gap: 1rem;
       padding: 1.5rem 2%;
       background-color: #f8f8f8;
@@ -165,8 +167,11 @@
     }
 
     footer form {
-      width: 100%;
-      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1 1 250px;
+      min-width: 250px;
     }
 
     footer form label {
@@ -208,7 +213,6 @@
       margin-top: 0.4rem;
       display: flex;
       gap: 0.4rem;
-      justify-content: center;
     }
 
     footer form > div.social-icons img {
@@ -223,9 +227,11 @@
     }
 
     footer > div:last-child {
+      flex: 1 1 250px;
+      text-align: right;
+      margin-top: 0;
       font-size: 0.65rem;
       color: #999;
-      margin-top: 0;
       align-self: center;
     }
 
@@ -261,6 +267,28 @@
       @keyframes slideDown {
         from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      footer form {
+        min-width: auto;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      footer > div:last-child {
+        text-align: center;
+        margin-top: 1rem;
+        align-self: center;
+      }
+
+      footer form > div.social-icons {
+        justify-content: center;
       }
     }
   </style>
@@ -392,3 +420,8 @@
   </script>
 </body>
 </html>
+```
+
+---
+
+If you want me to help with anything else—animations on the benefits card, or tweaking colors or fonts—just let me know!
