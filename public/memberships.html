@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Membership | Clean Canine Co.</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://js.stripe.com/v3/"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,6 +14,9 @@
       background: #fff;
       color: #111;
       line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
@@ -74,61 +77,64 @@
       margin-top: 6rem;
       padding: 2rem;
       text-align: center;
+      flex-grow: 1;
     }
 
-    main h1 {
+    h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
     }
 
-    main p {
+    p.description {
       font-size: 1.1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
       color: #333;
     }
 
-    /* New benefits card styling */
     .benefits-card {
+      background: #f7f9fc;
+      border-radius: 10px;
       max-width: 420px;
-      margin: 0 auto 2rem;
-      border: 1.5px solid #000;
-      border-radius: 12px;
-      padding: 1.6rem 2rem;
+      margin: 0 auto 2rem auto;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       text-align: left;
-      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
     }
 
     .benefits-card h2 {
+      font-size: 1.5rem;
       margin-bottom: 1rem;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #000;
+      color: #222;
       text-align: center;
     }
 
-    .benefits-list {
+    .benefits-card ul {
       list-style: none;
       padding-left: 0;
-      font-size: 1rem;
-      color: #222;
     }
 
-    .benefits-list li {
-      margin-bottom: 0.8rem;
+    .benefits-card li {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      color: #444;
     }
 
-    .benefits-list li svg {
+    .benefits-card svg {
+      flex-shrink: 0;
       width: 18px;
       height: 18px;
-      fill: #0b7a4d; /* nice green checkmark */
-      flex-shrink: 0;
+      margin-right: 0.6rem;
+      fill: #4caf50;
     }
 
     #subscribeBtn {
-      padding: 0.7rem 1.4rem;
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.6rem;
       background-color: #000;
       color: #fff;
       border: none;
@@ -136,19 +142,10 @@
       font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
-      display: inline-block;
-    }
-    #subscribeBtn:hover {
-      background-color: #444;
     }
 
-    footer {
-      text-align: center;
-      padding: 1.5rem 0;
-      font-size: 0.9rem;
-      color: #555;
-      background-color: #f8f8f8;
-      border-top: 1px solid #eaeaea;
+    #subscribeBtn:hover {
+      background-color: #444;
     }
 
     footer > div {
@@ -158,30 +155,36 @@
       justify-content: space-between;
       flex-wrap: wrap;
       align-items: flex-start;
+      gap: 1rem;
+      padding: 1.5rem 2%;
+      background-color: #f8f8f8;
+      border-top: 1px solid #eaeaea;
+      color: #555;
+      font-size: 0.9rem;
     }
 
     footer form {
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
-      flex: 1;
+      flex: 1 1 250px;
       min-width: 250px;
     }
 
-    footer label {
+    footer form label {
       font-weight: 600;
       font-size: 0.9rem;
       color: #333;
     }
 
-    footer input[type="email"] {
+    footer form input[type="email"] {
       padding: 0.5rem;
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 0.8rem;
     }
 
-    footer button[type="submit"] {
+    footer form button {
       padding: 0.45rem;
       background-color: #111;
       color: #fff;
@@ -189,38 +192,48 @@
       border-radius: 4px;
       font-size: 0.78rem;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    footer button[type="submit"]:hover {
-      background-color: #333;
     }
 
-    footer p {
+    footer form p {
       font-size: 0.65rem;
       color: #777;
-      margin: 0.3rem 0 0;
+      margin-top: 0.3rem;
       line-height: 1.4;
     }
 
-    footer p a {
+    footer form p a {
       text-decoration: underline;
       color: #666;
     }
 
-    footer > div:last-child {
-      width: 100%;
-      text-align: right;
-      margin-top: 1rem;
-      font-size: 0.65rem;
-      color: #999;
+    footer form > div.social-icons {
+      margin-top: 0.4rem;
+      display: flex;
+      gap: 0.4rem;
     }
 
-    /* Responsive navigation menu */
+    footer form > div.social-icons img {
+      filter: grayscale(100%) brightness(0.6);
+      opacity: 0.75;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    footer form > div.social-icons img:hover {
+      opacity: 1;
+    }
+
+    footer > div:last-child {
+      flex: 1 1 250px;
+      text-align: right;
+      margin-top: 0;
+      font-size: 0.65rem;
+      color: #999;
+      align-self: center;
+    }
 
     @media (max-width: 768px) {
-      .menu-toggle {
-        display: block;
-      }
+      .menu-toggle { display: block; }
 
       .nav-links {
         position: absolute;
@@ -234,6 +247,7 @@
         padding: 1.2rem 0;
         display: none;
         animation: slideDown 0.3s ease-out;
+        z-index: 1001;
       }
 
       .nav-links.show {
@@ -250,6 +264,28 @@
       @keyframes slideDown {
         from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      footer form {
+        min-width: auto;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      footer > div:last-child {
+        text-align: center;
+        margin-top: 1rem;
+        align-self: center;
+      }
+
+      footer form > div.social-icons {
+        justify-content: center;
       }
     }
   </style>
@@ -270,68 +306,82 @@
 
   <main>
     <h1>Join the Pack</h1>
-    <p>Get monthly grooming perks like nail trims, paw cleanups, and more for just $35/month.</p>
+    <p class="description">Get monthly grooming perks like nail trims, paw cleanups, and more for just $35/month.</p>
 
-    <div class="benefits-card" aria-label="Membership benefits">
+    <div class="benefits-card" aria-label="Membership Benefits">
       <h2>Membership Benefits</h2>
-      <ul class="benefits-list">
+      <ul>
         <li>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
           </svg>
           Nail trims
         </li>
         <li>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
           </svg>
           Teeth brushing
         </li>
         <li>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
           </svg>
           Face trim
         </li>
         <li>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
           </svg>
           Paw trim
         </li>
         <li>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
           </svg>
           Sanitary trim
         </li>
       </ul>
     </div>
 
-    <button id="subscribeBtn">Subscribe for $35/month</button>
+    <button id="subscribeBtn" aria-label="Subscribe for 35 dollars per month">
+      Subscribe for $35/month
+    </button>
   </main>
 
   <footer>
     <div>
       <form>
-        <label for="subscribeEmail">Subscribe</label>
-        <input id="subscribeEmail" type="email" placeholder="Your email" />
+        <label for="email">Subscribe</label>
+        <input id="email" type="email" placeholder="Your email" />
         <button type="submit">Join</button>
         <p>
-          By clicking on "Subscribe", you confirm that you have read and understood our
-          <a href="#">Privacy Statement</a> and that you want to receive the newsletter and other marketing communication as set out therein.
+          By clicking on "Subscribe", you confirm that you have read and understood our 
+          <a href="#" target="_blank" rel="noopener noreferrer">Privacy Statement</a> 
+          and that you want to receive the newsletter and other marketing communication as set out therein.
         </p>
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="" width="14" height="14" />
+          </a>
+          <a href="#" aria-label="Facebook">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="" width="14" height="14" />
+          </a>
+          <a href="#" aria-label="Twitter">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="" width="14" height="14" />
+          </a>
+          <a href="#" aria-label="Pinterest">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/pinterest.svg" alt="" width="14" height="14" />
+          </a>
+          <a href="#" aria-label="YouTube">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="" width="14" height="14" />
+          </a>
+        </div>
       </form>
-      <div style="margin-top: 0.4rem; display: flex; gap: 0.4rem;">
-        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
-        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
-        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
-        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/pinterest.svg" alt="Pinterest" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
-        <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" width="14" height="14" style="filter: grayscale(100%) brightness(0.6); opacity: 0.75;" /></a>
+
+      <div>
+        &copy; 2025 Clean Canine Co. All rights reserved.
       </div>
-    </div>
-    <div>
-      &copy; 2025 Clean Canine Co. All rights reserved.
     </div>
   </footer>
 
