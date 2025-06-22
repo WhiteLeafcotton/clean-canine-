@@ -1,644 +1,125 @@
+Great! Now that you have your Stripe subscription price ID (`price_1RcrraBDLsp0C0GfLDUaNm0w`), here’s how you can set up a simple HTML subscription checkout flow on your membership page using Stripe:
+
+---
+
+### ✅ HTML (public/membership.html or similar):
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Membership | Clean Canine Co.</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
-<style>
-  /* Reset */
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #fff;
-    color: #111;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  a { text-decoration: none; color: inherit; }
-
-  /* HEADER */
-  header {
-    background-color: #000;
-    color: #fff;
-    padding: 0.5rem 2%;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
-  }
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    position: relative;
-  }
-  .brand-name {
-    font-weight: 700;
-    font-size: 1.4rem;
-    text-transform: uppercase;
-    color: #fff;
-  }
-  .menu-toggle {
-    display: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #fff;
-    z-index: 1002;
-  }
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-  }
-  .nav-links a {
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-  @media (max-width: 768px) {
-    .menu-toggle { display: block; }
-    .nav-links {
-      position: absolute;
-      top: 3.5rem;
-      left: 0;
-      width: 100%;
-      background-color: rgba(0,0,0,0.95);
-      flex-direction: column;
-      align-items: center;
-      gap: 1.2rem;
-      padding: 1.2rem 0;
-      display: none;
-      animation: slideDown 0.3s ease-out;
-    }
-    .nav-links.show { display: flex; }
-    .nav-links a { font-size: 1.1rem; }
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  }
-
-  /* MAIN container for form below header */
-  main {
-    margin: 4.5rem auto 3rem;
-    width: 90%;
-    max-width: 600px;
-    flex-grow: 1;
-  }
-
-  h1 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-    font-size: 2rem;
-    color: #000;
-  }
-  
-  /* Form container */
-  form {
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    padding: 1.5rem 2rem 2rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Sliding cards container */
-  .slides {
-    display: flex;
-    width: 300%;
-    transition: transform 0.5s ease;
-  }
-  .slide {
-    width: 100%;
-    flex-shrink: 0;
-  }
-
-  /* Form fields */
-  label {
-    display: block;
-    font-weight: 600;
-    margin: 0.6rem 0 0.3rem;
-  }
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="number"],
-  select {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1.5px solid #ccc;
-    font-size: 1rem;
-    font-family: inherit;
-    transition: border-color 0.3s ease;
-  }
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  input[type="tel"]:focus,
-  input[type="number"]:focus,
-  select:focus {
-    outline: none;
-    border-color: #007BFF;
-  }
-
-  /* Pet list container */
-  .pet-list {
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  .pet-item {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 0.8rem;
-    position: relative;
-  }
-  .pet-item button.remove-pet {
-    position: absolute;
-    top: 0.6rem;
-    right: 0.6rem;
-    background: transparent;
-    border: none;
-    color: #c00;
-    font-weight: 700;
-    font-size: 1.3rem;
-    cursor: pointer;
-  }
-
-  /* Buttons */
-  .btn-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
-  }
-  button {
-    padding: 0.7rem 1.3rem;
-    font-size: 1rem;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    font-family: inherit;
-    transition: background-color 0.3s ease;
-  }
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  .btn-next {
-    background-color: #007BFF;
-    color: #fff;
-  }
-  .btn-next:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-  .btn-prev {
-    background-color: #ddd;
-    color: #111;
-  }
-  .btn-prev:hover {
-    background-color: #bbb;
-  }
-  .btn-add-pet {
-    background-color: #28a745;
-    color: #fff;
-    margin-top: 0.8rem;
-  }
-  .btn-add-pet:hover {
-    background-color: #1e7e34;
-  }
-
-  /* Validation error message */
-  .error-message {
-    color: #c00;
-    font-size: 0.9rem;
-    margin-top: 0.4rem;
-  }
-
-  /* Success message */
-  .success-message {
-    color: #28a745;
-    font-weight: 600;
-    font-size: 1.1rem;
-    text-align: center;
-    margin-top: 1rem;
-  }
-
-  /* Subscription button container */
-  .stripe-checkout {
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-  .stripe-checkout button {
-    background-color: #B5DBFF;
-    border: none;
-    color: black;
-    font-weight: 700;
-    padding: 0.7rem 2rem;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .stripe-checkout button:hover {
-    background-color: #87b9f8;
-  }
-
-  /* Area not covered */
-  .area-error {
-    color: #c00;
-    font-weight: 700;
-    font-size: 1.1rem;
-    text-align: center;
-    margin: 1rem 0;
-  }
-
-  /* Footer */
-  footer {
-    text-align: center;
-    padding: 1.5rem 2%;
-    font-size: 0.9rem;
-    color: #555;
-    background-color: #f8f8f8;
-    border-top: 1px solid #eaeaea;
-    margin-top: auto;
-  }
-  footer div {
-    max-width: 1200px;
-    margin: auto;
-  }
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Membership | Clean Canine Co.</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    /* Paste your existing header + footer CSS and layout styling here */
+  </style>
 </head>
 <body>
-
-<header>
-  <div class="navbar">
-    <a href="index.html" class="brand-name">clean canine Co.</a>
-    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">☰</div>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="Reviews.html" onclick="closeMenu()">Reviews</a></li>
-      <li><a href="products.html" onclick="closeMenu()">Products</a></li>
-      <li><a href="Services.html" onclick="closeMenu()">Services</a></li>
-      <li><a href="Book-Appointment.html" onclick="closeMenu()">Memberships</a></li>
-    </ul>
-  </div>
-</header>
-
-<main>
-  <h1>Join Clean Canine Membership</h1>
-
-  <form id="membershipForm" action="https://formspree.io/f/moqykznp" method="POST">
-
-    <div class="slides" id="slides">
-
-      <!-- Slide 1: Customer Info -->
-      <section class="slide" aria-label="Customer Information">
-        <label for="fullName">Full Name *</label>
-        <input type="text" id="fullName" name="Full Name" required />
-
-        <label for="email">Email Address *</label>
-        <input type="email" id="email" name="Email" required />
-
-        <label for="phone">Phone Number *</label>
-        <input type="tel" id="phone" name="Phone" required pattern="^\+?[0-9\s\-\(\)]{7,15}$" placeholder="+1 555-555-5555" />
-      </section>
-
-      <!-- Slide 2: Pets -->
-      <section class="slide" aria-label="Pets Information">
-        <div id="petList" class="pet-list"></div>
-
-        <button type="button" class="btn-add-pet" onclick="addPet()">+ Add Pet</button>
-      </section>
-
-      <!-- Slide 3: Address -->
-      <section class="slide" aria-label="Home Address">
-        <label for="address">Street Address *</label>
-        <input type="text" id="address" name="Address" required />
-
-        <label for="zip">ZIP Code *</label>
-        <input type="text" id="zip" name="ZIP" required pattern="^\d{5}$" maxlength="5" />
-
-        <div id="zipError" class="area-error" style="display:none;">Sorry, area not covered.</div>
-      </section>
+  <!-- Header -->
+  <header>
+    <div class="navbar">
+      <a href="index.html" class="brand-name">clean canine Co.</a>
+      <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">☰</div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="Reviews.html" onclick="closeMenu()">Reviews</a></li>
+        <li><a href="products.html" onclick="closeMenu()">Products</a></li>
+        <li><a href="Services.html" onclick="closeMenu()">Services</a></li>
+        <li><a href="membership.html" onclick="closeMenu()">Membership</a></li>
+      </ul>
     </div>
+  </header>
 
-    <div class="btn-group">
-      <button type="button" class="btn-prev" onclick="prevSlide()" disabled>← Back</button>
-      <button type="button" class="btn-next" onclick="nextSlide()">Next →</button>
+  <!-- Membership Content -->
+  <main style="margin-top: 6rem; padding: 2rem; text-align: center;">
+    <h1>Join the Pack</h1>
+    <p>Get monthly grooming perks like nail trims, paw cleanups, and more for just $35/month.</p>
+    
+    <button id="subscribeBtn" style="margin-top: 1.5rem; padding: 0.7rem 1.4rem; background-color: #000; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer;">
+      Subscribe for $35/month
+    </button>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div style="max-width: 1200px; margin: auto; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: flex-start;">
+      <div style="flex: 1; min-width: 250px;">
+        <form style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label style="font-weight: 600; font-size: 0.9rem; color: #333;">Subscribe</label>
+          <input type="email" placeholder="Your email" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem;">
+          <button type="submit" style="padding: 0.45rem; background-color: #111; color: #fff; border: none; border-radius: 4px; font-size: 0.78rem; cursor: pointer;">Join</button>
+          <p style="font-size: 0.65rem; color: #777; margin: 0.3rem 0 0;">
+            By clicking "Subscribe", you agree to receive marketing from Clean Canine Co.
+          </p>
+        </form>
+      </div>
+
+      <div style="width: 100%; text-align: right; margin-top: 1rem;">
+        <div style="font-size: 0.65rem; color: #999;">
+          &copy; 2025 Clean Canine Co. All rights reserved.
+        </div>
+      </div>
     </div>
+  </footer>
 
-    <!-- Stripe Checkout Button -->
-    <div class="stripe-checkout" style="display:none;">
-      <button id="checkoutBtn" type="button">Subscribe for $35/month</button>
-    </div>
-
-    <!-- Hidden inputs for pets data -->
-    <div id="hiddenPetsData"></div>
-
-  </form>
-</main>
-
-<footer>
-  <div>
-    <form style="display: flex; flex-direction: column; gap: 0.4rem;">
-      <label style="font-weight: 600; font-size: 0.9rem; color: #333;">Subscribe</label>
-      <input type="email" placeholder="Your email" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem;">
-      <button type="submit" style="padding: 0.45rem; background-color: #111; color: #fff; border: none; border-radius: 4px; font-size: 0.78rem; cursor: pointer;">Join</button>
-      <p style="font-size: 0.65rem; color: #777; margin: 0.3rem 0 0; line-height: 1.4;">
-        By clicking on "Subscribe", you confirm that you have read and understood our
-        <a href="#" style="text-decoration: underline; color: #666;">Privacy Statement</a>
-        and that you want to receive the newsletter and other marketing communication as set out therein.
-      </p>
-    </form>
-    <div style="width: 100%; text-align: right; margin-top: 1rem;">
-      <div style="font-size: 0.65rem; color: #999;">&copy; 2025 Clean Canine Co. All rights reserved.</div>
-    </div>
-  </div>
-</footer>
-
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-  // Navigation menu toggle
-  function toggleMenu() {
-    const nav = document.getElementById("navLinks");
-    const toggle = document.getElementById("menuToggle");
-    nav.classList.toggle("show");
-    toggle.classList.toggle("open");
-  }
-  function closeMenu() {
-    const nav = document.getElementById("navLinks");
-    const toggle = document.getElementById("menuToggle");
-    nav.classList.remove("show");
-    toggle.classList.remove("open");
-  }
-
-  // Sliding cards logic
-  const slides = document.getElementById('slides');
-  const btnPrev = document.querySelector('.btn-prev');
-  const btnNext = document.querySelector('.btn-next');
-  const stripeCheckoutDiv = document.querySelector('.stripe-checkout');
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  const form = document.getElementById('membershipForm');
-  const zipInput = document.getElementById('zip');
-  const zipError = document.getElementById('zipError');
-  const hiddenPetsData = document.getElementById('hiddenPetsData');
-
-  let currentSlide = 0;
-  const totalSlides = slides.children.length;
-
-  // Predefined ZIPs within 40 miles radius of Milwaukee (central ZIP 53202)
-  // For demo, a simplified subset of ZIP codes near Milwaukee, WI:
-  const milwaukeeZip = 53202;
-  // You can add more ZIPs or do a better lookup based on lat/lon if you want
-  const serviceAreaZips = [
-    53202,53203,53204,53205,53206,53207,53208,53209,53210,53211,53212,53213,53214,
-    53110,53126,53127,53132,53137,53144,53146,53149,53150,53154,53158,53167,53168,
-    53172,53173,53177,53178,53179,53181,53182,53183,53189
-  ];
-
-  // Navigation functions
-  function updateSlide() {
-    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
-    btnPrev.disabled = currentSlide === 0;
-    btnNext.textContent = currentSlide === totalSlides - 1 ? 'Review & Subscribe →' : 'Next →';
-
-    // Hide stripe checkout button except on last slide & only if ZIP is valid
-    if(currentSlide === totalSlides - 1) {
-      validateZipAndToggleStripe();
-    } else {
-      stripeCheckoutDiv.style.display = 'none';
-      zipError.style.display = 'none';
+  <script>
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("show");
+      document.getElementById("menuToggle").classList.toggle("open");
     }
-  }
-  function nextSlide() {
-    if (currentSlide === totalSlides - 1) {
-      // On last slide: do nothing, user must click Subscribe button
-      return;
+
+    function closeMenu() {
+      document.getElementById("navLinks").classList.remove("show");
+      document.getElementById("menuToggle").classList.remove("open");
     }
-    if (validateCurrentSlide()) {
-      currentSlide++;
-      updateSlide();
-    }
-  }
-  function prevSlide() {
-    if (currentSlide === 0) return;
-    currentSlide--;
-    updateSlide();
-  }
 
-  // Validation per slide
-  function validateCurrentSlide() {
-    if (currentSlide === 0) {
-      // Validate customer info
-      const fullName = document.getElementById('fullName');
-      const email = document.getElementById('email');
-      const phone = document.getElementById('phone');
+    document.getElementById("subscribeBtn").addEventListener("click", async () => {
+      const stripe = Stripe("pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR");
 
-      if (!fullName.value.trim()) { alert('Please enter your full name.'); fullName.focus(); return false; }
-      if (!email.value.trim() || !validateEmail(email.value)) { alert('Please enter a valid email.'); email.focus(); return false; }
-      if (!phone.value.trim() || !validatePhone(phone.value)) { alert('Please enter a valid phone number.'); phone.focus(); return false; }
+      const response = await fetch("https://clean-canine-1.onrender.com/create-subscription-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          priceId: "price_1RcrraBDLsp0C0GfLDUaNm0w"
+        })
+      });
 
-      return true;
-    } else if (currentSlide === 1) {
-      // Validate at least one pet added
-      if (petCount() === 0) {
-        alert('Please add at least one pet.');
-        return false;
-      }
-      // Validate all pets info
-      for (let i = 0; i < petCount(); i++) {
-        const petName = document.getElementById(`petName_${i}`);
-        const petType = document.getElementById(`petType_${i}`);
-        if (!petName.value.trim()) {
-          alert(`Please enter name for pet #${i + 1}.`);
-          petName.focus();
-          return false;
-        }
-        if (!petType.value) {
-          alert(`Please select type for pet #${i + 1}.`);
-          petType.focus();
-          return false;
-        }
-      }
-      return true;
-    } else if (currentSlide === 2) {
-      // Validate address & zip
-      const address = document.getElementById('address');
-      const zip = document.getElementById('zip');
-      if (!address.value.trim()) { alert('Please enter your street address.'); address.focus(); return false; }
-      if (!zip.value.trim() || !/^\d{5}$/.test(zip.value)) { alert('Please enter a valid 5-digit ZIP code.'); zip.focus(); return false; }
-      return true;
-    }
-    return true;
-  }
-
-  // Simple email validation
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email.toLowerCase());
-  }
-  // Simple phone validation
-  function validatePhone(phone) {
-    const re = /^\+?[0-9\s\-\(\)]{7,15}$/;
-    return re.test(phone);
-  }
-
-  // Pet list management
-  function petCount() {
-    return document.querySelectorAll('.pet-item').length;
-  }
-  function addPet() {
-    const i = petCount();
-    const petList = document.getElementById('petList');
-
-    const petDiv = document.createElement('div');
-    petDiv.className = 'pet-item';
-    petDiv.id = `petItem_${i}`;
-    petDiv.innerHTML = `
-      <button type="button" class="remove-pet" aria-label="Remove pet" onclick="removePet(${i})">&times;</button>
-      <label for="petName_${i}">Pet Name *</label>
-      <input type="text" id="petName_${i}" name="Pet ${i + 1} Name" required />
-
-      <label for="petType_${i}">Pet Type *</label>
-      <select id="petType_${i}" name="Pet ${i + 1} Type" required>
-        <option value="" disabled selected>Select pet type</option>
-        <option value="Dog">Dog</option>
-        <option value="Cat">Cat</option>
-        <option value="Other">Other</option>
-      </select>
-    `;
-    petList.appendChild(petDiv);
-  }
-  function removePet(i) {
-    const petDiv = document.getElementById(`petItem_${i}`);
-    if(petDiv) petDiv.remove();
-  }
-
-  // ZIP radius check & show Stripe checkout button
-  function validateZipAndToggleStripe() {
-    const zipVal = zipInput.value.trim();
-    if(!/^\d{5}$/.test(zipVal)) {
-      zipError.style.display = 'none';
-      stripeCheckoutDiv.style.display = 'none';
-      return;
-    }
-    const zipNum = parseInt(zipVal, 10);
-    if(serviceAreaZips.includes(zipNum)) {
-      zipError.style.display = 'none';
-      stripeCheckoutDiv.style.display = 'block';
-    } else {
-      zipError.style.display = 'block';
-      stripeCheckoutDiv.style.display = 'none';
-    }
-  }
-  zipInput.addEventListener('input', () => {
-    zipError.style.display = 'none';
-    stripeCheckoutDiv.style.display = 'none';
-  });
-
-  zipInput.addEventListener('blur', () => {
-    validateZipAndToggleStripe();
-  });
-
-  // On checkout button click: compile form data, send to Formspree, then open Stripe checkout
-  checkoutBtn.addEventListener('click', async () => {
-    // Validate address & zip again before submission
-    if(!validateCurrentSlide()) return;
-
-    // Prepare pets data in hidden fields (Formspree only submits form inputs)
-    hiddenPetsData.innerHTML = ''; // Clear
-    const pets = document.querySelectorAll('.pet-item');
-    pets.forEach((pet, index) => {
-      const petName = pet.querySelector(`#petName_${index}`).value.trim();
-      const petType = pet.querySelector(`#petType_${index}`).value;
-      const inputName = document.createElement('input');
-      inputName.type = 'hidden';
-      inputName.name = `Pet ${index + 1} Name`;
-      inputName.value = petName;
-      hiddenPetsData.appendChild(inputName);
-
-      const inputType = document.createElement('input');
-      inputType.type = 'hidden';
-      inputType.name = `Pet ${index + 1} Type`;
-      inputType.value = petType;
-      hiddenPetsData.appendChild(inputType);
+      const session = await response.json();
+      await stripe.redirectToCheckout({ sessionId: session.id });
     });
-
-    // Disable button to prevent double clicks
-    checkoutBtn.disabled = true;
-    checkoutBtn.textContent = 'Processing...';
-
-    // Submit form to Formspree using fetch to capture success/error before Stripe
-    const formData = new FormData(form);
-    try {
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      if (response.ok) {
-        // Proceed to Stripe checkout
-        await startStripeCheckout();
-      } else {
-        alert('Oops! There was a problem submitting your info. Please try again.');
-        checkoutBtn.disabled = false;
-        checkoutBtn.textContent = 'Subscribe for $35/month';
-      }
-    } catch (error) {
-      alert('Oops! There was a problem submitting your info. Please try again.');
-      checkoutBtn.disabled = false;
-      checkoutBtn.textContent = 'Subscribe for $35/month';
-    }
-  });
-
-  // Stripe setup
-  const stripe = Stripe('pk_test_51RcTWABDLsp0C0GfBjeVaPuDEYhnI47Z8hV8l5APOVTtQvSDXKPhMseUTXIBPvOBBd6W4hb8ZnhgHc0Mmxd644Ao00AkC8mnDR'); // <-- Replace with your actual Stripe publishable key
-
-  async function startStripeCheckout() {
-    // Call your backend or create checkout session client side here:
-    // For demo, we'll redirect to Stripe's hosted checkout with your price ID:
-    // IMPORTANT: For subscriptions, Stripe recommends creating the checkout session server-side.
-    // Here is a client-only demo using Stripe's client-only method.
-
-    try {
-      const { error } = await stripe.redirectToCheckout({
-        mode: 'subscription',
-        lineItems: [{ price: 'price_1RcrraBDLsp0C0GfLDUaNm0w', quantity: 1 }],
-        successUrl: window.location.origin + '/success.html',
-        cancelUrl: window.location.origin + '/membership.html'
-      });
-      if (error) {
-        alert(error.message);
-        checkoutBtn.disabled = false;
-        checkoutBtn.textContent = 'Subscribe for $35/month';
-      }
-    } catch (e) {
-      alert('Stripe error: ' + e.message);
-      checkoutBtn.disabled = false;
-      checkoutBtn.textContent = 'Subscribe for $35/month';
-    }
-  }
-
-  // Initialize form - add first pet by default
-  addPet();
-
-  // Initialize slide view
-  updateSlide();
-
-</script>
-
+  </script>
 </body>
 </html>
+```
+
+---
+
+### ✅ Server-side (`/create-subscription-session` endpoint):
+
+This will **not affect your product one-time payments**. Just add a new POST route alongside your existing `/create-checkout-session` route:
+
+```js
+// server.js (Node.js + Express)
+app.post('/create-subscription-session', async (req, res) => {
+  const { priceId } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: 'https://yourdomain.com/success.html',
+      cancel_url: 'https://yourdomain.com/cancel.html',
+    });
+
+    res.json({ id: session.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Subscription session creation failed' });
+  }
+});
+```
+
+---
+
+Let me know if you'd like a creative layout variation or animated section for the membership benefits!
