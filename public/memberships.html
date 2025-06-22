@@ -87,6 +87,46 @@
       color: #333;
     }
 
+    /* New benefits card styling */
+    .benefits-card {
+      max-width: 420px;
+      margin: 0 auto 2rem;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      padding: 1.6rem 2rem;
+      text-align: left;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    }
+
+    .benefits-card h2 {
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #000;
+      text-align: center;
+    }
+
+    .benefits-list {
+      list-style: none;
+      padding-left: 0;
+      font-size: 1rem;
+      color: #222;
+    }
+
+    .benefits-list li {
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .benefits-list li svg {
+      width: 18px;
+      height: 18px;
+      fill: #0b7a4d; /* nice green checkmark */
+      flex-shrink: 0;
+    }
+
     #subscribeBtn {
       padding: 0.7rem 1.4rem;
       background-color: #000;
@@ -96,6 +136,7 @@
       font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      display: inline-block;
     }
     #subscribeBtn:hover {
       background-color: #444;
@@ -230,6 +271,42 @@
   <main>
     <h1>Join the Pack</h1>
     <p>Get monthly grooming perks like nail trims, paw cleanups, and more for just $35/month.</p>
+
+    <div class="benefits-card" aria-label="Membership benefits">
+      <h2>Membership Benefits</h2>
+      <ul class="benefits-list">
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+          </svg>
+          Nail trims
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+          </svg>
+          Teeth brushing
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+          </svg>
+          Face trim
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+          </svg>
+          Paw trim
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.285 6.708a1 1 0 00-1.414-1.415L9 15.164 5.129 11.29a1 1 0 10-1.415 1.415l4.95 4.95a1 1 0 001.414 0l9.207-9.207z"/>
+          </svg>
+          Sanitary trim
+        </li>
+      </ul>
+    </div>
 
     <button id="subscribeBtn">Subscribe for $35/month</button>
   </main>
