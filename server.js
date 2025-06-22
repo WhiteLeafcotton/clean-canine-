@@ -22,8 +22,8 @@ app.post('/create-checkout-session', async (req, res) => {
         quantity: item.quantity,
       })),
       mode: 'payment',
-      success_url: 'https://your-app-name.onrender.com/success.html',
-      cancel_url: 'https://your-app-name.onrender.com/cancel.html',
+      success_url: 'https://clean-canine-1.onrender.com/success.html',
+      cancel_url: 'https://clean-canine-1.onrender.com/cancel.html',
     });
 
     res.json({ id: session.id });
